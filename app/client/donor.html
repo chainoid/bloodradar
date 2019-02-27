@@ -76,8 +76,87 @@
     </header>
 
     <div id="body">
+      
+     <div class="form-group"  id="header_profile" >
+            <label>Donor profile</label><br>
+            Donor ID: <input class="form-control input-field" type="text" placeholder=" Ex: 40789" ng-model="donorId"> 
+            <p><input id="getDonorById" type="submit" value="Query" class="btn btn-success" ng-click="getDonorById()"></p>
+     </div>
+     
+     <table id="donor_profile" class="table" align="center">
+        <tr>
+         <th>Name</th>
+         <th>Address</th>
+         <th>Phone</th>
+         <th>SSN</th>
+         <th>Sex</th>
+         <th>Age</th>
+         <th>Blood type</th>
+        </tr>
+        <tr>
+         <td>{{selected_donor.name}}</td>
+         <td>{{selected_donor.address}}</td>
+         <td>{{selected_donor.phone}}</td>
+         <td>{{selected_donor.ssn}}</td>
+         <td>{{selected_donor.sex}}</td>
+         <td>{{selected_donor.age}}</td>
+         <td>{{selected_donor.btype}}</td>
+        </tr>
+     </table>
 
-    TBD      
+      <div class="form-group"  id="header_history" >
+         <p><input id="queryAllParsels" type="submit" value="History" class="btn btn-success" ng-click="getDonorHistory(donorId)"></p>
+      </div>
+  
+      <div class="alert alert-danger" role="alert" id="error_donor_history">
+        Error: Cannot load history for this Donor
+      </div>
+  
+      <!-- <table id="donor_history_header" class="table" align="center">
+         <tr>
+          <th>Donor ID</th>
+          <th>SSN</th>
+          <th>Sex</th>
+          <th>Blood type</th>
+         </tr>
+         <tr>
+          <td>{{selected_donor.Key}}</td>
+          <td>{{selected_donor.ssn}}</td>
+          <td>{{selected_donor.sex}}</td>
+          <td>{{selected_donor.btype}}</td>
+         </tr>
+      </table> -->
+  
+      <table id="donor_history" class="table" align="center">
+        <tr>
+          <th>Tx Timestamp</th>
+          <th>Tx Id</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Age</th>
+          <th>Deleted</th>
+        </tr>
+        <tr ng-repeat="rec in donor_history">
+          <td>{{rec.TxTS}}</td>
+          <td>{{rec.TxId}}</td>
+          <td>{{rec.name}}</td> 
+          <td>{{rec.address}}</td>
+          <td>{{rec.phone}}</td>
+          <td>{{rec.age}}</td>
+          <td>{{rec.IsDelete}}</td>  
+        </tr>
+      </table>
+  
+
+      <div class="form-group"  id="header_activity" >
+          <label>List of Donor activity</label><br>
+          Donor ID: <input class="form-control input-field" type="text" placeholder=" Ex: 0" ng-model="donor.Key"> 
+          <p><input id="queryAllParsels" type="submit" value="Query" class="btn btn-success" ng-click="getDonorActivity(donor)"></p>
+      </div>
+
+
+
      
       <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -85,7 +164,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="index.html"> Main</a> <br/>
-          <a class="dropdown-item" href="hostipal.html"> Hospital</a> <br/>
+          <a class="dropdown-item" href="hospital.html"> Hospital</a> <br/>
           <a class="dropdown-item" href="camp.html"> Blood Camp</a> <br/>
           <a class="dropdown-item" href="bbank.html"> Blood Bank</a> <br/>
           <a class="dropdown-item" href="admin.html"> Admin</a> <br/>

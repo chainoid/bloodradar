@@ -80,8 +80,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.initDonorLedger(APIstub)
 	} else if function == "queryDonorsByBtype" {
 		return s.queryDonorsByBtype(APIstub, args)
-	}  else if function == "queryDonor" {
-		return s.queryDonor(APIstub, args)
+	}  else if function == "getDonorById" {
+		return s.getDonorById(APIstub, args)
 	} else if function == "addDonor" {
 		return s.addDonor(APIstub, args)
 	} else if function == "updateDonor" {
@@ -103,10 +103,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 */
 func (s *SmartContract) initDonorLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	donors := []Donor{
-		Donor{Name: "Alex", SSN: "100001", Address: "Address 1, City, ZIP", Phone: "67-50", Age: "21",  Btype: "Apos"},
-	  Donor{Name: "Ben" , SSN: "200002", Address: "Address 1, City, ZIP", Phone: "89-99", Age: "22",  Btype: "ABpos"},
-	  Donor{Name: "John", SSN: "300003", Address: "Address 1, City, ZIP", Phone: "44-45", Age: "33",  Btype: "Apos"},
-	  Donor{Name: "Nick", SSN: "400004", Address: "Address 1, City, ZIP", Phone: "01-22", Age: "44",  Btype: "Aneg"},
+		Donor{Name: "Alex", SSN: "100001", Address: "Address 1, City, ZIP", Phone: "67-50", Age: "21", Sex:"Male", Btype: "Apos"},
+	  Donor{Name: "Ben" , SSN: "200002", Address: "Address 1, City, ZIP", Phone: "89-99", Age: "22", Sex:"Male", Btype: "ABpos"},
+	  Donor{Name: "John", SSN: "300003", Address: "Address 1, City, ZIP", Phone: "44-45", Age: "33", Sex:"Male", Btype: "Apos"},
+	  Donor{Name: "Nick", SSN: "400004", Address: "Address 1, City, ZIP", Phone: "01-22", Age: "44", Sex:"Male", Btype: "Aneg"},
 	}
 
 	i := 0
@@ -183,24 +183,24 @@ func (s *SmartContract) queryDonorsByBtype(APIstub shim.ChaincodeStubInterface, 
 
 
 /*
-  * The queryDonor method *
+  * The getDonorById method *
   Used to view the records of one particular parsel
   It takes one argument -- the key for the parsel in question
 */
-func (s *SmartContract) queryDonor(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) getDonorById(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 
-	parselAsBytes, err := APIstub.GetState(args[0])
+	donorAsBytes, err := APIstub.GetState(args[0])
 	if err != nil {
-		return shim.Error("Could not locate client")
+		return shim.Error("Could not locate donor")
 	}
 
-	fmt.Printf("- queryDonor:\n%s\n", parselAsBytes)
+	fmt.Printf("- getDonorById:\n%s\n", donorAsBytes)
 
-	return shim.Success(parselAsBytes)
+	return shim.Success(donorAsBytes)
 }
 
 /*

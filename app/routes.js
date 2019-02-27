@@ -22,6 +22,9 @@ module.exports = function(app){
   app.get('/get_donors_by_btype/:btype', function(req, res){
     radar.get_donors_by_btype(req, res);
   });
+  app.get('/get_donor_by_id/:donorId', function(req, res){
+    radar.get_donor_by_id(req, res);
+  });
   app.get('/get_clients_by_range/:range', function(req, res){
     radar.get_clients_by_range(req, res);
   });

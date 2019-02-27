@@ -58,6 +58,20 @@ return{
 		ReadFromLedger(model, res);	    
 	},
 
+	get_donor_by_id: function(req, res){
+
+		console.log("get donor by id: ");
+
+		var donorId = req.params.donorId;
+		
+		var queryDonorByIdParams = {
+			DonorId:    donorId
+		};
+
+		var model = GetRecordMapModel(queryDonorByIdParams, 'donors', 'getDonorById', 'donor-channel');
+
+		ReadFromLedger(model, res);	    
+	},
 
 	get_clients_by_range: function(req, res){
 
