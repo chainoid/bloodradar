@@ -1,0 +1,316 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin page</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- require jquery and bootstrap scripts -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+   
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: rgb(241, 137, 142);
+        font-size:20px;
+        padding:15px;
+      }
+          
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      }
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+      .input-field {
+         width: 200px;
+         padding: 6px 1px;
+         margin-left: 0px;
+      }
+    </style>
+  </head>
+
+  <body ng-app="application" ng-controller="appController">
+    <header class="my-header">
+      <div id="left_header">Blood Radar: Administration page.</div>
+      <i id="right_header">Bloodbank Maintenance and Reporting System on the Hyperledger Fabric.</i>
+    </header>
+
+    <div id="body">
+
+ <!--  Get all clients from client channel-->
+ <div class="form-group">
+    <label>Query all Clients in System</label>
+    <p><input id="queryAllClients" type="submit" value="Query" class="btn btn-success" ng-click="queryAllClients()"></p>
+  </div>
+
+  <div class="alert alert-danger" role="alert" id="error_query_all">
+     Error of query request
+  </div>
+
+  <table id="all_clients" class="table table-hover" align="center">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Branch</th>
+      <th>Rate</th>
+       <th></th>
+    <tr ng-repeat="client in all_clients">
+      <td>{{client.Key}}</td>
+      <td>{{client.name}}</td>
+      <td>{{client.address}}</td>
+      <td>{{client.phone}}</td>
+      <td>{{client.branchId}}</td>
+      <td>{{client.rate}}</td>
+      <td>  <!-- Action button -->
+        <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Action
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="" ng-click="beforeUpdateClient(client)">Update client</a><br/>
+          <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> View sent parsels</a><br/>
+          <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> View received parsels</a> <br/>
+          <a class="dropdown-item" href=""> Rate history</a> <br/>
+          <a class="dropdown-item" href="" ng-click="getClientHistory(client)"> History</a> <br/>
+        </div>
+      </div></td>
+    </tr>
+  </table>
+
+  
+<!--  Get clients by range from client channel-->
+<div class="form-group">
+  <label>Query Clients By Range</label><br/>
+  From index: <input class="form-control input-field" type="text" placeholder=" Ex: 0" ng-model="range.from"> 
+  To index:   <input class="form-control input-field" type="text" placeholder=" Ex: 1" ng-model="range.to">
+
+  <p><input id="queryClientsByRange" type="submit" value="Query" class="btn btn-success" ng-click="queryClientsByRange()"></p>
+</div>
+
+<div class="alert alert-warning" role="alert" id="error_query_range">
+   No data found
+</div>
+
+<table id="ranged_clients" class="table table-hover" align="center">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Phone</th>
+    <th>Branch</th>
+    <th>Rate</th>
+     <th></th>
+  <tr ng-repeat="client in ranged_clients">
+    <td>{{client.Key}}</td>
+    <td>{{client.name}}</td>
+    <td>{{client.address}}</td>
+    <td>{{client.phone}}</td>
+    <td>{{client.branchId}}</td>
+    <td>{{client.rate}}</td>
+    <td>  <!-- Action button -->
+      <div class="dropdown">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Action
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="" ng-click="beforeUpdateClient(client)">Update client</a><br/>
+        <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> View sent parsels</a><br/>
+        <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> View received parsels</a> <br/>
+        <a class="dropdown-item" href=""> Rate history</a> <br/>
+        <a class="dropdown-item" href="" ng-click="getClientHistory(client)"> History</a> <br/>
+      </div>
+    </div></td>
+  </tr>
+</table>
+
+    <div class="alert alert-danger" role="alert" id="error_no_sent_data_found">
+      No sent parsel found  
+    </div>
+ 
+    <table id="client_sent_parsels" class="table" align="center">
+      <tr>
+        <th>Parsel ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+  
+      <tr ng-repeat="parsel in client_sent_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverId}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+      </tr>
+    </table>
+      
+
+    <div class="alert alert-danger" role="alert" id="error_no_rec_data_found">
+      No received parsels found  
+    </div>
+ 
+    <table id="client_rec_parsels" class="table" align="center">
+      <tr>
+        <th>Parsel ID</th>
+        <th>Sender ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+  
+      <tr ng-repeat="parsel in client_rec_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderId}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+      </tr>
+    </table>
+
+
+    <div class="form-group"  id="header_history" >
+      <label>Query History of Client</label>
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_client_history">
+      Error: Cannot load history for this Client
+    </div>
+
+    <table id="client_history_header" class="table" align="center">
+       <tr>
+        <th>Client ID</th>
+        <!-- <th>Sender Branch</th>
+        <th>Sender TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th> -->
+       </tr>
+       <tr>
+        <td>{{selected_client.Key}}</td>
+        <!-- <td>{{selected_parsel.senderBranch}}</td>
+        <td>{{selected_parsel.senderTS}}</td>
+        <td>{{selected_parsel.receiverId}}</td>
+        <td>{{selected_parsel.receiverBranch}}</td>
+        <td>{{selected_parsel.receiverTS}}</td> -->
+       </tr>
+
+    </table>
+
+    <table id="client_history" class="table" align="center">
+      <tr>
+        <th>Tx Timestamp</th>
+        <th>Tx Id</th>
+        <th>Name</th>
+        <th>Branch Id</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Rate</th>
+        <th>Deleted</th>
+      </tr>
+      <tr ng-repeat="rec in client_history">
+        <td>{{rec.TxTS}}</td>
+        <td>{{rec.TxId}}</td>
+        <td>{{rec.name}}</td> 
+        <td>{{rec.branchId}}</td>
+        <td>{{rec.address}}</td>
+        <td>{{rec.phone}}</td>
+        <td>{{rec.rate}}</td>
+        <td>{{rec.IsDelete}}</td>  
+      </tr>
+    </table>
+
+    <div class="form-group" id="new_client_button_panel" >
+      <input id="openClientId" type="submit" value="New client" class="btn btn-warning" ng-click="beforeAddClient()">
+      <div class="alert alert-success" role="alert" id="success_add_client">
+        Success! Tx ID: {{accepted_client_id}}
+      </div>
+      <div class="alert alert-success" role="alert" id="success_update_client">
+        Success! Tx ID: {{accepted_client_id}}
+      </div>
+    </div>
+
+    <div class="form-group" id="add_client_panel" >
+      <label id="addClientLabel">Add client into System</label>
+      <label id="updateClientLabel">Update client</label><br/>
+    
+      Name: <input class="form-control input-field" type="text" placeholder=" Ex: John" ng-model="client.name"> 
+      Address: <input class="form-control input-field" type="text" placeholder=" Ex: Main str. 34" ng-model="client.address">
+      Phone: <input class="form-control input-field" type="text" placeholder=" 380-45-55" ng-model="client.phone">
+      Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
+      <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
+      <input id="updateClientId" type="submit" value="Update client" class="btn btn-warning" ng-click="updateClient()">
+      <input id="cancelClientId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelAddClient()">
+    </div>
+
+      <div class="dropdown dropup">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Switch to Page
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="index.html"> Main</a> <br/>
+          <a class="dropdown-item" href="parsels.html"> Parsels</a> <br/>
+          <a class="dropdown-item" href="service.html"> Service</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+        </div>
+      </div>
+
+      <br/>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app4.js"> </script>
+</html>

@@ -1,0 +1,217 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hospital page</title>
+  <link rel="icon" href="favicon.png" type="image/gif">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- require jquery and bootstrap scripts -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+  <!-- adding style here -->
+  <style type="text/css">
+    header {
+      background-color: rgb(241, 137, 142);
+      font-size: 20px;
+      padding: 15px;
+    }
+
+    #body {
+      margin-left: 3%;
+      margin-right: 3%;
+    }
+
+    .form-control {
+      margin: 8px;
+    }
+
+    #right_header {
+      width: 20%;
+      font-size: 15px;
+      margin-right: 0px;
+    }
+
+    #left_header {
+      margin-left: 0;
+      width: 40%;
+      display: inline-block;
+    }
+
+    #id {
+      width: 49%;
+      display: inline-block;
+    }
+
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    .input-field {
+      width: 200px;
+      padding: 6px 1px;
+      margin-left: 0px;
+    }
+  </style>
+</head>
+
+<body ng-app="application" ng-controller="appController">
+  <header class="my-header">
+    <div id="left_header">Blood Radar: Hospital cases</div>
+    <i id="right_header">Bloodbank Maintenance and Reporting System on the Hyperledger Fabric.</i>
+  </header>
+
+  <div id="body">
+
+    <!--  Get all parsels from parsel channel-->
+    <div class="form-group">
+      <label>Query All Parsels in System</label>
+      <p><input id="queryAllParsels" type="submit" value="Query" class="btn btn-success" ng-click="queryAllParsels()"></p>
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_query_all">
+      Error of query request
+    </div>
+    
+    <div class="alert alert-danger" role="alert" id="error_id_delete_parsel">
+      Error Id for delete request
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_not_delivered">
+      The undelivered parsel cannot be deleted 
+    </div>
+
+    <div class="alert alert-success" role="alert" id="success_delete">
+      Parsel deleted successfully 
+    </div>
+
+    <table id="all_parsels" class="table" align="center">
+      <tr>
+        <th>ID</th>
+        <th>Sender ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+        <th></th>
+      <tr ng-repeat="parsel in all_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderId}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverId}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+        <td>  <!-- Action button -->
+          <div class="dropdown">
+          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Action
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="service.html"> Accept</a> <br/>
+            <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
+            <a class="dropdown-item" href="service.html"> Return</a> <br/>
+            <a class="dropdown-item" href="service.html"> Delivery</a> <br/>
+            <a class="dropdown-item" href="" ng-click="getParselHistory(parsel)"> History</a> <br/>
+            <a class="dropdown-item" href="" ng-click="deleteParsel(parsel)"> Delete</a> <br/>
+          </div>
+        </div></td>
+      </tr>
+    </table>
+
+
+    <div class="form-group" id="history_header" >
+      <label>Query History of Parsel</label>
+      <!-- Enter a parsel ID: <input id="parselID" class="form-control input-field" type="text" placeholder=" Ex: 2" ng-model="historyId">
+      <input id="historyParsel" type="submit" value="History" class="btn btn-primary" ng-click="historyParsel()"> -->
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_parsel_history">
+      Error: Cannot load history for this Parsel ID
+    </div>
+
+    <table id="parsel_history_header" class="table" align="center">
+       <tr>
+        <th>Sender ID</th>
+        <th>Sender Branch</th>
+        <th>Sender TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+       </tr>
+       <tr>
+        <td>{{selected_parsel.senderId}}</td>
+        <td>{{selected_parsel.senderBranch}}</td>
+        <td>{{selected_parsel.senderTS}}</td>
+        <td>{{selected_parsel.receiverId}}</td>
+        <td>{{selected_parsel.receiverBranch}}</td>
+        <td>{{selected_parsel.receiverTS}}</td>
+       </tr>
+
+    </table>
+
+    <table id="parsel_history" class="table" align="center">
+      <tr>
+        <th>Tx Timestamp</th>
+        <th>Tx Id</th>
+        <th>Courier</th>
+        <th>Courier Timestamp</th>
+        <th>Deleted</th>
+      </tr>
+      <tr ng-repeat="rec in parsel_history">
+        <td>{{rec.TxTS}}</td>
+        <td>{{rec.TxId}}</td>
+        <td>{{rec.courierId}}</td> 
+        <td>{{rec.courierTS}}</td>
+        <td>{{rec.IsDelete}}</td>  
+      </tr>
+    </table>
+
+
+    <div class="dropdown dropup">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Switch to Page
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="index.html"> Main</a> <br/>
+        <a class="dropdown-item" href="service.html"> Service</a> <br/>
+        <a class="dropdown-item" href="clients.html"> Clients</a> <br/>
+        <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+      </div>
+    </div>
+    
+    <br/>
+
+</body>
+
+<!-- requiring the angular page -->
+<script type="text/javascript" src="app1.js"> </script>
+
+</html>

@@ -1,0 +1,27 @@
+{
+    "name": "Fabric-posta-app",
+    "version": "1.0.0",
+    "description": "Hyperledger Fabric Sample Application",
+    "main": "server.js",
+    "dependencies": {
+        "angular": "^1.4.3",
+        "body-parser": "latest",
+        "bootstrap": "^4.2.1",
+        "ejs": "latest",
+        "express": "latest",
+        "fabric-ca-client": "^1.0.2",
+        "fabric-client": "^1.4.0",
+        "grpc": "^1.12.3",
+        "system-sleep": "^1.3.6"
+    },
+    "license": "Apache-2.0",
+    "keywords": [
+        "Hyperledger",
+        "Fabric",
+        "Posta",
+        "Parsel",
+        "Delivery",
+        "Sample",
+        "Application"
+    ]
+}

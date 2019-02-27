@@ -1,0 +1,14 @@
+
+header, .form-group{
+  margin-bottom: 1%;
+  margin-top:1%;
+}
+.form-group{
+  background-color: #dddddd;
+  padding: 1%;
+}
+
+.my-header{
+    margin-left: 2%;
+    margin-right: 2%;
+}

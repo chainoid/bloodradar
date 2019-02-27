@@ -1,0 +1,87 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blood Radar</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- require jquery and bootstrap scripts -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+   
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: rgb(241, 137, 142);
+        font-size:20px;
+        padding:15px;
+      }
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      }
+      #right_link{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      </style>
+  </head>
+
+  <body ng-app="application" ng-controller="appController">
+    <header class="my-header">
+      <div id="left_header">Blood Radar: Main</div>
+      <i id="right_header">Bloodbank Maintenance and Reporting System on the Hyperledger Fabric.</i>
+    </header>
+
+    <div id="body">
+     
+
+      <table id="main" class="table" align="center">
+        <th>Select role for start:</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <tr >
+          <td><b id="right_header"><a id="right_link" href="hospital.html">Hospital</a></b></td>
+          <td><b id="right_header"><a id="right_link" href="camp.html">Blood Camp</a></b></td>
+          <td><b id="right_header"><a id="right_link" href="bbank.html">Blood Bank</a></b></td> 
+          <td><b id="right_header"><a id="right_link" href="admin.html">Admin</a></b></td>
+          <td><b id="right_header"><a id="right_link" href="donor.html">Donor</a></b></td>
+        </tr>
+      </table>
+  </body>
+    <!-- requiring the angular page -->
+    <!--script type="text/javascript" src="app.js"> </script> -->
+</html>

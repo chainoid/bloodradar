@@ -1,0 +1,172 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bloodbank page</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- require jquery and bootstrap scripts -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: rgb(241, 137, 142);
+        font-size:20px;
+        padding:15px;
+      }
+           
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      }
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+      .input-field {
+          width: 200px;
+          padding: 6px 1px;
+          margin-left: 0px;
+      }
+    </style>
+  </head>
+  <body ng-app="application" ng-controller="appController">
+    <header class="my-header">
+      <div id="left_header">Blood Radar: Bloodbank page</div>
+      <i id="right_header">Bloodbank Maintenance and Reporting System on the Hyperledger Fabric.</i>
+    </header>
+
+    <div id="body">
+
+      <div class="form-group">
+            <label>Create the Parsel Order</label><br>
+            
+            <div class="alert alert-danger" role="alert" id="error_serder_receiver_id">
+                Error of Sender and(or) Receiver Id
+            </div>
+           
+            <div class="alert alert-success" role="alert" id="success_create_order">
+              Success! Tx ID: {{create_order_result}}
+            </div>
+
+             Sender Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB17" ng-model="order.senderId">
+             Receiver Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 8FE0789" ng-model="order.receiverId">
+            <input id="prepareForDeliveryId" type="submit" value="Create order" class="btn btn-warning" ng-click="createParselOrder()">
+      </div>
+
+
+      <div class="form-group">
+          <label>Accept the Parsel</label><br>
+
+          <div class="alert alert-danger" role="alert" id="error_accept_parsel_id">
+            {{accepted_parsel_result}}
+          </div>
+
+          <div class="alert alert-danger" role="alert" id="error_accept_parsel_done">
+            {{accepted_parsel_result}}
+          </div>
+
+          <div class="alert alert-success" role="alert" id="success_accepted">
+            Success! Tx ID: {{accepted_parsel_result}}
+          </div>
+    
+           Parsel ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="accept.parselId">
+           Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 003" ng-model="accept.branchId">
+          <input id="prepareForDeliveryId" type="submit" value="Accept parsel" class="btn btn-warning" ng-click="acceptParsel()">
+      </div>
+
+      
+      <div class="form-group">
+          <label>Switch Parsel to next Courier</label><br>
+
+          <div class="alert alert-danger" role="alert" id="error_switch_courier">
+            Error: Please enter a valid parsel Id
+          </div>
+
+          <div class="alert alert-success" role="alert" id="success_switch_courier">
+              Success! Tx ID: {{switch_courier_result}}
+          </div>
+         
+           Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
+           Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
+          <input id="prepareForDeliveryId" type="submit" value="Switch courier" class="btn btn-warning" ng-click="switchCourier()">
+      </div>
+
+      <div class="form-group">
+          <label>Delivery Parsel to Receiver</label><br>
+          
+          <div class="alert alert-success" role="alert" id="success_delivery">
+            Success! Tx ID: {{delivery_parsel}}
+          </div>
+
+          <div class="alert alert-danger" role="alert" id="error_parsel_id">
+              Error: Please enter a valid Parsel Id
+            </div>
+          
+          <div class="alert alert-warning" role="alert" id="error_delivered">
+              Error: This Parsel already delivered
+          </div>
+
+
+           Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="delivery.parselId">
+           Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 997" ng-model="delivery.branchId">
+          <input id="deliveryParselId" type="submit" value="Delivery parsel" class="btn btn-warning" ng-click="deliveryParsel()">
+      </div>
+            
+
+      <div class="dropdown dropup">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Switch to Page
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="index.html"> Main</a> <br/>
+          <a class="dropdown-item" href="parsels.html"> Parsels</a> <br/>
+          <a class="dropdown-item" href="clients.html"> Clients</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+        </div>
+      </div>
+      
+      <br/>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app3.js"> </script>
+</html>
