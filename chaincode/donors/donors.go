@@ -231,16 +231,14 @@ func (s *SmartContract) addDonor(APIstub shim.ChaincodeStubInterface, args []str
 
 /*
   * The updateDonor method *
- allows for assessing all the records from selected sender
+ allows for update _some_ fields of selected donor 
 
  Returns JSON string containing results.
 */
 func (s *SmartContract) updateDonor(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-
-
-	if len(args) != 7 {
-		return shim.Error("Incorrect number of arguments. Expecting 7")
+	if len(args) != 5 {
+		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
 	donorAsBytes, _ := APIstub.GetState(args[0])
@@ -255,11 +253,10 @@ func (s *SmartContract) updateDonor(APIstub shim.ChaincodeStubInterface, args []
 
 	json.Unmarshal(donorAsBytes, &donor)
 
-
 	// Update donor fields
-	donor.Name    = args[0]
-	donor.Address = args[1]
-	donor.Phone   = args[2]
+	donor.Name    = args[1]
+	donor.Address = args[2]
+	donor.Phone   = args[3]
 	// SSN   -- unmutable
 	donor.Age     = args[4]
 	// Sex   -- unmutable
@@ -371,7 +368,7 @@ func (s *SmartContract) donorHistory(APIstub shim.ChaincodeStubInterface, args [
 	}
 	buffer.WriteString("]")
 
-	fmt.Printf("- historyClient:\n%s\n", buffer.String())
+	fmt.Printf("- donorHistory:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }

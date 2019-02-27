@@ -205,19 +205,19 @@ return{
 		var name = array[1]
 		var address = array[2]
 		var phone = array[3]
-		var branchId = array[4]
+		var age = array[4]
 
-		var client = {
+		var donorParams = {
 			Key:      key,
             Name:     name,
             Address:  address,
             Phone:    phone,
-            BranchId: branchId
+            Age:      age
 		};
 
         // Retrieve Blockchain Parameter Mapping Model
 		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(client, 'clients', 'updateClient', 'client-channel');
+		var model = GetRecordMapModel(donorParams, 'donors', 'updateDonor', 'donor-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		
@@ -298,17 +298,17 @@ return{
 	},
 	
 
-	client_history: function(req, res){
+	donor_history: function(req, res){
 
-		console.log("get client history: ");
+		console.log("get donor history: ");
 
-		var clientKey = req.params.clientKey
+		var donorKey = req.params.donorKey
 
 		var historytParams = {
-			Key:  clientKey
+			Key:  donorKey
 		};
 
-		var model = GetRecordMapModel(historytParams, 'clients', 'clientHistory', 'client-channel');
+		var model = GetRecordMapModel(historytParams, 'donors', 'donorHistory', 'donor-channel');
 
 		ReadFromLedger(model, res);	   
 	},

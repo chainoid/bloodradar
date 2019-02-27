@@ -25,14 +25,14 @@ module.exports = function(app){
   app.get('/get_clients_by_range/:range', function(req, res){
     radar.get_clients_by_range(req, res);
   });
-  app.get('/client_history/:clientKey', function(req, res){
-    radar.client_history(req, res);
+  app.get('/donor_history/:donorKey', function(req, res){
+    radar.donor_history(req, res);
   });
   app.get('/add_donor/:donor', function(req, res){
     radar.add_donor(req, res);
   });
   app.get('/update_donor/:donor', function(req, res){
-    radar.update_client(req, res);
+    radar.update_donor(req, res);
   });
   app.get('/create_parsel_order/:order', function(req, res){
     radar.create_parsel_order(req, res);

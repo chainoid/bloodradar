@@ -22,10 +22,10 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#success_update_donor").hide();
 
 	
-	$("#error_client_history").hide();
+	$("#error_donor_history").hide();
 	$("#header_history").hide();
-	$("#client_history_header").hide();
-	$("#client_history").hide();
+	$("#donor_history_header").hide();
+	$("#donor_history").hide();
 
 	$scope.queryDonorsByBtype = function () {
 
@@ -42,8 +42,8 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#donors_by_btype").show();
 				$("#error_query_donors_by_type").hide();
 				$("#header_history").hide();
-				$("#client_history_header").hide();
-				$("#client_history").hide();
+				$("#donor_history_header").hide();
+				$("#donor_history").hide();
 				$("#success_add_donor").hide();
 				$("#success_update_donor").hide();
 
@@ -61,37 +61,37 @@ app.controller('appController', function ($scope, appFactory) {
 	}
 
 
-	$scope.queryClientsByRange = function () {
+	// $scope.queryClientsByRange = function () {
 
-		appFactory.queryClientsByRange($scope.range, function (data) {
+	// 	appFactory.queryClientsByRange($scope.range, function (data) {
 
 
-			if (data  == "Error: No data found") {
-				console.log()
-				$("#error_query_range").show();
-				$("#ranged_clients").hide();
+	// 		if (data  == "Error: No data found") {
+	// 			console.log()
+	// 			$("#error_query_range").show();
+	// 			$("#ranged_clients").hide();
 				
-			} else{
-				$("#ranged_clients").show();
-				$("#error_query_range").hide();
-				$("#header_history").hide();
-				$("#client_history_header").hide();
-				$("#client_history").hide();
-				$("#success_add_donor").hide();
-				$("#success_update_donor").hide();
+	// 		} else{
+	// 			$("#ranged_clients").show();
+	// 			$("#error_query_range").hide();
+	// 			$("#header_history").hide();
+	// 			$("#client_history_header").hide();
+	// 			$("#client_history").hide();
+	// 			$("#success_add_donor").hide();
+	// 			$("#success_update_donor").hide();
 
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function(a, b) {
-			    return a.name.localeCompare(b.name);
-			});
-			$scope.ranged_clients = array;
-		  }
-		});
-	}
+	// 		var array = [];
+	// 		for (var i = 0; i < data.length; i++) {
+	// 			data[i].Record.Key = data[i].Key;
+	// 			array.push(data[i].Record);
+	// 		}
+	// 		array.sort(function(a, b) {
+	// 		    return a.name.localeCompare(b.name);
+	// 		});
+	// 		$scope.ranged_clients = array;
+	// 	  }
+	// 	});
+	// }
 
 
 	$scope.beforeAddDonor = function () {
@@ -126,7 +126,6 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-
 	$scope.beforeUpdateDonor = function (donor) {
 		
 		$("#addDonorLabel").hide();
@@ -152,26 +151,26 @@ app.controller('appController', function ($scope, appFactory) {
 	}
  
 
-	$scope.getClientHistory = function (client) {
+	$scope.getDonorHistory = function (donor) {
 
-		var clientKey = client.Key;
+		var donorKey = donor.Key;
 
-	 	appFactory.clientHistory(clientKey, function (data) {
+	 	appFactory.donorHistory(donorKey, function (data) {
 
 			if (data  == "Error: No data found"){
 				$("#error_no_sent_data_found").hide();
 				
 				$("#header_history").hide();
-				$("#error_client_history").show();
-				$("#client_history_header").hide();
-				$("#client_history").hide();
+				$("#error_donor_history").show();
+				$("#donor_history_header").hide();
+				$("#donor_history").hide();
 								
 			} else{
 								
-				$("#error_client_history").hide();
+				$("#error_donor_history").hide();
 				$("#header_history").show();
-				$("#client_history_header").show();
-				$("#client_history").show();
+				$("#donor_history_header").show();
+				$("#donor_history").show();
 			
 			  var array = [];
 			  for (var i = 0; i < data.length; i++) {
@@ -187,8 +186,8 @@ app.controller('appController', function ($scope, appFactory) {
 			array.sort(function(a, b) {
 			    return a.TxTS.localeCompare(b.TxTS);
 			});
-			$scope.client_history = array;
-			$scope.selected_client = client;
+			$scope.donor_history = array;
+			$scope.selected_donor = donor;
 			} 
 		});
 	}
@@ -254,7 +253,7 @@ app.factory('appFactory', function ($http) {
 
 	factory.updateDonor = function (data, callback) {
 
-		var donor = data.name + "-" + data.address + "-" + data.phone + "-" + data.ssn + "-" + data.age + "-" + data.sex + "-" + data.btype;
+		var donor = data.Key+"-"+ data.name + "-" + data.address + "-" + data.phone + "-" + data.age;
 
 		$http.get('/update_donor/' + donor).success(function (output) {
 			callback(output)
@@ -262,9 +261,9 @@ app.factory('appFactory', function ($http) {
 	}
 	
 
-	factory.clientHistory = function (clientKey, callback) {
+	factory.donorHistory = function (donorKey, callback) {
 
-		$http.get('/client_history/' + clientKey).success(function (output) {
+		$http.get('/donor_history/' + donorKey).success(function (output) {
 			callback(output)
 		});
     }
