@@ -35,10 +35,11 @@ Structure tags are used by encoding/json library
 */
 type Donor struct {
 	Name           string `json:"name"`
-  SSN            string `json:"ssn"`
-	Address        string `json:"address"`
+  Address        string `json:"address"`
 	Phone          string `json:"phone"`
+	SSN            string `json:"ssn"`
 	Age            string `json:"age"`
+	Sex            string `json:"sex"`
 	Btype          string `json:"btype"`
 }
 
@@ -209,11 +210,11 @@ func (s *SmartContract) queryDonor(APIstub shim.ChaincodeStubInterface, args []s
 
 func (s *SmartContract) addDonor(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	 if len(args) != 4 {
-	 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	 if len(args) != 7 {
+	 	return shim.Error("Incorrect number of arguments. Expecting 7")
 	 }
 
-	 var donor =Donor{Name: args[0], Address: args[1], Phone: args[2], SSN: args[3], Age: "18"}
+	 var donor = Donor{Name: args[0], Address: args[1], Phone: args[2], SSN: args[3], Age: args[4], Sex: args[5], Btype: args[6]}
 
 	 donorAsBytes, _ := json.Marshal(donor)
 	 err := APIstub.PutState(randomId(), donorAsBytes)
@@ -238,8 +239,8 @@ func (s *SmartContract) updateDonor(APIstub shim.ChaincodeStubInterface, args []
 
 
 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+	if len(args) != 7 {
+		return shim.Error("Incorrect number of arguments. Expecting 7")
 	}
 
 	donorAsBytes, _ := APIstub.GetState(args[0])
@@ -256,10 +257,13 @@ func (s *SmartContract) updateDonor(APIstub shim.ChaincodeStubInterface, args []
 
 
 	// Update donor fields
-	donor.Name    = args[1]
-	donor.Address = args[2]
-	donor.Phone   = args[3]
+	donor.Name    = args[0]
+	donor.Address = args[1]
+	donor.Phone   = args[2]
+	// SSN   -- unmutable
 	donor.Age     = args[4]
+	// Sex   -- unmutable
+	// Btype -- unmutable
 
 	donorAsBytes, _ = json.Marshal(donor)
 	err := APIstub.PutState(args[0], donorAsBytes)
@@ -271,65 +275,6 @@ func (s *SmartContract) updateDonor(APIstub shim.ChaincodeStubInterface, args []
 
 	return shim.Success(nil)
 
-
-	// startKey := "0"
-	// endKey := "9999"
-
-	// resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
-	// defer resultsIterator.Close()
-
-	// // buffer is a JSON array containing QueryResults
-	// var buffer bytes.Buffer
-
-	// buffer.WriteString("[")
-
-	// bArrayMemberAlreadyWritten := false
-
-	// for resultsIterator.HasNext() {
-	// 	queryResponse, err := resultsIterator.Next()
-	// 	if err != nil {
-	// 		return shim.Error(err.Error())
-	// 	}
-
-	// 	// Create an object
-	// 	parsel := Parsel{}
-	// 	// Unmarshal record to parsel
-	// 	json.Unmarshal(queryResponse.Value, &parsel)
-
-	// 	// Add only filtered ny sender records
-	// 	if parsel.Sender == args[0] {
-
-	// 		// Add comma before array members,suppress it for the first array member
-	// 		if bArrayMemberAlreadyWritten == true {
-	// 			buffer.WriteString(",")
-	// 		}
-
-	// 		buffer.WriteString("{\"Key\":")
-	// 		buffer.WriteString("\"")
-	// 		buffer.WriteString(queryResponse.Key)
-	// 		buffer.WriteString("\"")
-
-	// 		buffer.WriteString(", \"Record\":")
-	// 		// Record is a JSON object, so we write as-is
-	// 		buffer.WriteString(string(queryResponse.Value))
-	// 		buffer.WriteString("}")
-	// 		bArrayMemberAlreadyWritten = true
-	// 	}
-	// }
-	// buffer.WriteString("]")
-
-	// if bArrayMemberAlreadyWritten == false {
-	// 	return shim.Error(err.Error())
-	// }
-
-	// fmt.Printf("- updateDonor:\n%s\n", buffer.String())
-
-	//return shim.Success(buffer.Bytes())
-
-	return shim.Success(nil)
 }
 
 /*

@@ -16,17 +16,12 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#ranged_clients").hide();
 	
 
-	$("#new_client_button_panel").show();
-	$("#add_client_panel").hide();
-	$("#success_add_client").hide();
-	$("#success_update_client").hide();
+	$("#new_donor_button_panel").show();
+	$("#add_donor_panel").hide();
+	$("#success_add_donor").hide();
+	$("#success_update_donor").hide();
 
-	$("#client_sent_parsels").hide();
-	$("#error_no_sent_data_found").hide();
-
-	$("#client_rec_parsels").hide();
-	$("#error_no_rec_data_found").hide();
-
+	
 	$("#error_client_history").hide();
 	$("#header_history").hide();
 	$("#client_history_header").hide();
@@ -49,8 +44,8 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#header_history").hide();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
-				$("#success_add_client").hide();
-				$("#success_update_client").hide();
+				$("#success_add_donor").hide();
+				$("#success_update_donor").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -82,8 +77,8 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#header_history").hide();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
-				$("#success_add_client").hide();
-				$("#success_update_client").hide();
+				$("#success_add_donor").hide();
+				$("#success_update_donor").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -99,125 +94,63 @@ app.controller('appController', function ($scope, appFactory) {
 	}
 
 
-	$scope.beforeAddClient = function () {
+	$scope.beforeAddDonor = function () {
 		
-		$("#addClientLabel").show();
-		$("#updateClientLabel").hide();
-		$("#new_client_button_panel").hide();
-		$("#add_client_panel").show();
-		$("#addClientId").show();
-		$("#updateClientId").hide();
+		$("#addDonorLabel").show();
+		$("#updateDonorLabel").hide();
+		$("#new_donor_button_panel").hide();
+		$("#add_donor_panel").show();
+		$("#addDonorId").show();
+		$("#updateDonorId").hide();
 
-		$scope.client = null;
+		$scope.donor = null;
 	}
 
-	$scope.cancelAddClient = function () {
+	$scope.cancelAddDonor = function () {
 
-		$("#new_client_button_panel").show();
-		$("#add_client_panel").hide();
+		$("#new_donor_button_panel").show();
+		$("#add_donor_panel").hide();
 
-		$("#success_add_client").hide();
-		$("#success_update_client").hide();
+		$("#success_add_donor").hide();
+		$("#success_update_donor").hide();
 	}
 
-    $scope.addClient = function () {
+  $scope.addDonor = function () {
 
-		appFactory.addClient($scope.client, function(data){
-			$scope.accepted_client_id = data;
-			$("#success_add_client").show();
-			$("#add_client_panel").hide();
+		appFactory.addDonor($scope.donor, function(data){
+			$scope.accepted_donor_id = data;
+			$("#success_add_donor").show();
+			$("#add_donor_panel").hide();
 
-			$("#new_client_button_panel").show();
+			$("#new_donor_button_panel").show();
 		});
 	}
 
 
-	$scope.beforeUpdateClient = function (client) {
+	$scope.beforeUpdateDonor = function (donor) {
 		
-		$("#addClientLabel").hide();
-		$("#updateClientLabel").show();
-		$("#new_client_button_panel").hide();
+		$("#addDonorLabel").hide();
+		$("#updateDonorLabel").show();
+		$("#new_donor_button_panel").hide();
 
-		$("#addClientId").hide();
-		$("#updateClientId").show();
+		$("#addDonorId").hide();
+		$("#updateDonorId").show();
 		
-		$("#add_client_panel").show();
+		$("#add_donor_panel").show();
 
-		$scope.client = client;
+		$scope.donor = donor;
 	}
 
-	$scope.updateClient = function ()  {
+	$scope.updateDonor = function ()  {
 
-		appFactory.updateClient($scope.client, function(data){
-			$scope.accepted_client_id = data;
-			$("#new_client_button_panel").show();
-			$("#success_update_client").show();
-			$("#add_client_panel").hide();
+		appFactory.updateDonor($scope.donor, function(data){
+			$scope.accepted_donor_id = data;
+			$("#new_donor_button_panel").show();
+			$("#success_update_donor").show();
+			$("#add_donor_panel").hide();
 		});
 	}
-
-
-    $scope.getClientSentParsels = function (client) {
-
-		var name = client.name;
-
-		appFactory.clientSentParsels(name, function (data) {
-	
-			if (data  == "Error: No data found"){
-				$("#error_no_sent_data_found").show();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
-				$("#error_no_rec_data_found").hide();
-				
-			} else{
-				$("#client_sent_parsels").show();
-				$("#client_rec_parsels").hide();
-				$("#error_no_sent_data_found").hide();
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
-			});
-			$scope.client_sent_parsels = array;
-		  }
-		});
-	}
-
-	 $scope.getClientReceivedParsels = function (client) {
-
-		var name = client.name;
-
-	 	appFactory.clientReceivedParsels(name, function (data) {
-
-			if (data  == "Error: No data found"){
-				$("#error_no_rec_data_found").show();
-				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
-				
-			} else{
-				$("#error_no_rec_data_found").hide();
-				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").show();
-			
-			  var array = [];
-			  for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
-			});
-			$scope.client_rec_parsels = array;
-			} 
-		});
-	}
-
+ 
 
 	$scope.getClientHistory = function (client) {
 
@@ -227,19 +160,14 @@ app.controller('appController', function ($scope, appFactory) {
 
 			if (data  == "Error: No data found"){
 				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
+				
 				$("#header_history").hide();
 				$("#error_client_history").show();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
 								
 			} else{
-				$("#error_no_rec_data_found").hide();
-				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
-				$("#client_rec_parsels").hide();
+								
 				$("#error_client_history").hide();
 				$("#header_history").show();
 				$("#client_history_header").show();
@@ -315,38 +243,24 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	factory.addClient = function (data, callback) {
+	factory.addDonor = function (data, callback) {
 
-		var client = data.name + "-" + data.address + "-" + data.phone + "-" + data.branchId;
+		var donor = data.name + "-" + data.address + "-" + data.phone + "-" + data.ssn + "-" + data.age + "-" + data.sex + "-" + data.btype;
 
-		$http.get('/add_client/' + client).success(function (output) {
+		$http.get('/add_donor/' + donor).success(function (output) {
 			callback(output)
 		});
 	}
 
-	factory.updateClient = function (data, callback) {
+	factory.updateDonor = function (data, callback) {
 
-		var client = data.Key + "-" + data.name + "-" + data.address + "-" + data.phone + "-" + data.branchId;
+		var donor = data.name + "-" + data.address + "-" + data.phone + "-" + data.ssn + "-" + data.age + "-" + data.sex + "-" + data.btype;
 
-		$http.get('/update_client/' + client).success(function (output) {
+		$http.get('/update_donor/' + donor).success(function (output) {
 			callback(output)
 		});
 	}
-
-
-	factory.clientSentParsels = function (name, callback) {
-		
-		$http.get('/get_sent_parsels/' + name).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.clientReceivedParsels = function (name, callback) {
-
-	 	$http.get('/get_received_parsels/' + name).success(function (output) {
-	 		callback(output)
-	 	});
-	}
+	
 
 	factory.clientHistory = function (clientKey, callback) {
 

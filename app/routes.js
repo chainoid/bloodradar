@@ -19,12 +19,6 @@ module.exports = function(app){
   app.get('/parsel_history/:parselId', function(req, res){
     radar.parsel_history(req, res);
   });
-  app.get('/get_sent_parsels/:name', function(req, res){
-    radar.get_sent_parsels(req, res);
-  });
-  app.get('/get_received_parsels/:name', function(req, res){
-    radar.get_received_parsels(req, res);
-  });
   app.get('/get_donors_by_btype/:btype', function(req, res){
     radar.get_donors_by_btype(req, res);
   });
@@ -34,10 +28,10 @@ module.exports = function(app){
   app.get('/client_history/:clientKey', function(req, res){
     radar.client_history(req, res);
   });
-  app.get('/add_client/:client', function(req, res){
-    radar.add_client(req, res);
+  app.get('/add_donor/:donor', function(req, res){
+    radar.add_donor(req, res);
   });
-  app.get('/update_client/:client', function(req, res){
+  app.get('/update_donor/:donor', function(req, res){
     radar.update_client(req, res);
   });
   app.get('/create_parsel_order/:order', function(req, res){

@@ -159,28 +159,34 @@ return{
        },
 
 
-	add_client: function(req, res){
+	add_donor: function(req, res){
 
-		console.log("submit recording of new client: ");
+		console.log("submit recording of new donor: ");
 
-		var array = req.params.client.split("-");
+		var array = req.params.donor.split("-");
 		console.log(array);
 
 		var name = array[0]
 		var address = array[1]
 		var phone = array[2]
-		var branchId = array[3]
+		var ssn = array[3]
+		var age = array[4]
+		var sex = array[5]
+		var btype = array[6]
 
-		var client = {
+		var donorParams = {
             Name:     name,
             Address:  address,
             Phone:    phone,
-            BranchId: branchId
+			SSN:      ssn,
+			Age:	  age,
+			Sex:	  sex,
+			Btype:	  btype	
 		};
 
         // Retrieve Blockchain Parameter Mapping Model
 		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(client, 'clients', 'addClient', 'client-channel');
+		var model = GetRecordMapModel(donorParams, 'donors', 'addDonor', 'donor-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		
@@ -188,11 +194,11 @@ return{
 	},
 
 
-	update_client: function(req, res){
+	update_donor: function(req, res){
 
-		console.log("submit recording for update client: ");
+		console.log("submit recording for update donor: ");
 
-		var array = req.params.client.split("-");
+		var array = req.params.donor.split("-");
 		console.log(array);
 
 		var key = array[0]
@@ -289,39 +295,6 @@ return{
 		//     console.error('Failed to query successfully :: ' + err);
 		//     res.send("Could not locate parsel")
 		// });
-	},
-
-	get_sent_parsels: function(req, res){
-
-		console.log(" getting all sent parsels by client: ");
-
-		var name = req.params.name
-		console.log(name);
-		
-		var querySentParselsParams = {
-			Key:  name
-		};
-
-		var model = GetRecordMapModel(querySentParselsParams, 'parsels', 'clientSentParsels', 'parsel-channel');
-
-		ReadFromLedger(model, res);
-	},
-
-
-	get_received_parsels: function(req, res){
-
-		console.log(" getting all received parsels by client: ");
-
-		var name = req.params.name
-		console.log(name);
-		
-		var queryReceivedParselsParams = {
-			Key:  name
-		};
-
-		var model = GetRecordMapModel(queryReceivedParselsParams, 'parsels', 'clientReceivedParsels', 'parsel-channel');
-
-		ReadFromLedger(model, res);
 	},
 	
 
