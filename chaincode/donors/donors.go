@@ -148,6 +148,15 @@ func (s *SmartContract) queryDonorsByBtype(APIstub shim.ChaincodeStubInterface, 
 		if err != nil {
 			return shim.Error(err.Error())
 		}
+
+	  // Create an object
+  	donor := Donor{}
+	// Unmarshal record to parsel
+	json.Unmarshal(queryResponse.Value, &donor)
+
+	// Add only filtered by sender records
+	if donor.Btype == args[0] {
+
 		// Add comma before array members,suppress it for the first array member
 		if bArrayMemberAlreadyWritten == true {
 			buffer.WriteString(",")
@@ -162,6 +171,7 @@ func (s *SmartContract) queryDonorsByBtype(APIstub shim.ChaincodeStubInterface, 
 		buffer.WriteString(string(queryResponse.Value))
 		buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
+	}
 	}
 
 	buffer.WriteString("]")

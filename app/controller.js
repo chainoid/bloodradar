@@ -43,16 +43,17 @@ return{
 	},	
 
 
-	get_all_clients: function(req, res){
+	get_donors_by_btype: function(req, res){
 
-		console.log("getting all clients from ledger: ");
+		console.log("getting donors by btype: ");
+
+		var btype = req.params.btype;
 		
-		var queryClientListParams = {
-			Key: '' // For now we pass a blank string to query all consultants,
-			        // TODO : add fromKey, toKey
+		var queryDonorsByBtypeParams = {
+			Btype:    btype
 		};
 
-		var model = GetRecordMapModel(queryClientListParams, 'clients', 'queryAllClients', 'client-channel');
+		var model = GetRecordMapModel(queryDonorsByBtypeParams, 'donors', 'queryDonorsByBtype', 'donor-channel');
 
 		ReadFromLedger(model, res);	    
 	},
