@@ -35,6 +35,10 @@ module.exports = function(app){
   app.get('/query_bpack_by_btype/:queryParams', function(req, res){
      radar.query_bpack_by_btype(req, res);
   });
+  app.get('/do_transfuse/:bpackId', function(req, res){
+    radar.do_transfuse(req, res);
+  });
+  
 
 
   app.get('/get_parsel/:id', function(req, res){

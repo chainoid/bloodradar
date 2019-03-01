@@ -54,6 +54,7 @@ type Bpack struct {
 	DonationTS     string `json:"donationTS"`
 	Location       string `json:"location"` 
 	Holder				 string `json:"holder"`
+	HolderTS			 string `json:"holderTS"`
   Status         string `json:"status"`
 	Desc           string `json:"desc"`
 
@@ -102,13 +103,9 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.createParselOrder(APIstub, args)
 	} else if function == "queryBpackByBtype" {
 		return s.queryBpackByBtype(APIstub, args)
-	} else if function == "deliveryParsel" {
-		return s.deliveryParsel(APIstub, args)
-	} else if function == "clientSentParsels" {
-		return s.clientSentParsels(APIstub, args)
-	}  else if function == "clientReceivedParsels" {
-		return s.clientReceivedParsels(APIstub, args)
-	}else if function == "bpackHistory" {
+	} else if function == "doTransfuse" {
+		return s.doTransfuse(APIstub, args)
+	} else if function == "bpackHistory" {
 		return s.bpackHistory(APIstub, args)
 	} else if function == "switchCourier" {
 		return s.switchCourier(APIstub, args)
@@ -248,146 +245,6 @@ func (s *SmartContract) queryBpackByBtype(APIstub shim.ChaincodeStubInterface, a
 	return shim.Success(buffer.Bytes())
 }
 
-/*
-  * The clientSentParsels method *
- allows for assessing all the records from selected sender
-
- Returns JSON string containing results.
-*/
-func (s *SmartContract) clientSentParsels(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	startKey := "0"
-	endKey := "9999"
-
-	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	defer resultsIterator.Close()
-
-	// buffer is a JSON array containing QueryResults
-	var buffer bytes.Buffer
-	buffer.WriteString("[")
-
-	bArrayMemberAlreadyWritten := false
-
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		// Create an object
-		parsel := Parsel{}
-		// Unmarshal record to parsel
-		json.Unmarshal(queryResponse.Value, &parsel)
-
-		// Add only filtered by sender records
-		if parsel.SenderId == args[0] {
-
-			// Add comma before array members,suppress it for the first array member
-			if bArrayMemberAlreadyWritten == true {
-				buffer.WriteString(",")
-			}
-
-			buffer.WriteString("{\"Key\":")
-			buffer.WriteString("\"")
-			buffer.WriteString(queryResponse.Key)
-			buffer.WriteString("\"")
-
-			buffer.WriteString(", \"Record\":")
-			// Record is a JSON object, so we write as-is
-			buffer.WriteString(string(queryResponse.Value))
-			buffer.WriteString("}")
-			bArrayMemberAlreadyWritten = true
-		}
-	}
-	buffer.WriteString("]")
-
-	//if bArrayMemberAlreadyWritten == false {
-	//	return shim.Error("No data found")
-	//}
-
-	fmt.Printf("- getClientSentParsels:\n%s\n", buffer.String())
-
-	return shim.Success(buffer.Bytes())
-}
-
-
-/*
-  * The clientReceivedParsels method *
- allows for assessing all the records from selected sender
-
- Returns JSON string containing results.
-*/
-func (s *SmartContract) clientReceivedParsels(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	startKey := "0"
-	endKey := "9999"
-
-	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	defer resultsIterator.Close()
-
-	// buffer is a JSON array containing QueryResults
-	var buffer bytes.Buffer
-
-	buffer.WriteString("[")
-
-	bArrayMemberAlreadyWritten := false
-
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		// Create an object
-		parsel := Parsel{}
-		// Unmarshal record to parsel
-		json.Unmarshal(queryResponse.Value, &parsel)
-
-		// Add only filtered by sender records
-		if parsel.ReceiverId == args[0] {
-
-			// Add comma before array members,suppress it for the first array member
-			if bArrayMemberAlreadyWritten == true {
-				buffer.WriteString(",")
-			}
-
-			buffer.WriteString("{\"Key\":")
-			buffer.WriteString("\"")
-			buffer.WriteString(queryResponse.Key)
-			buffer.WriteString("\"")
-
-			buffer.WriteString(", \"Record\":")
-			// Record is a JSON object, so we write as-is
-			buffer.WriteString(string(queryResponse.Value))
-			buffer.WriteString("}")
-			bArrayMemberAlreadyWritten = true
-		}
-	}
-	buffer.WriteString("]")
-
-	//if bArrayMemberAlreadyWritten == false {
-	//	return shim.Error("No data found")
-	//}
-
-	fmt.Printf("- clientReceivedParsels:\n%s\n", buffer.String())
-
-	return shim.Success(buffer.Bytes())
-}
 
 
 /*
@@ -482,45 +339,46 @@ func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args 
 
 
 /*
-  * The deliveryParsel method *
+  * The doTransfuse method *
  The data in the world state can be updated with who has possession.
  This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
 */
-func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) doTransfuse(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 
-	parselAsBytes, _ := APIstub.GetState(args[0])
-	if parselAsBytes == nil {
+	bpackAsBytes, _ := APIstub.GetState(args[0])
+	if bpackAsBytes == nil {
 
-        fmt.Printf("- deliveryParsel with id: %s Parsel not found \n", args[0])
+        fmt.Printf("- doTransfuse with id: %s Bpack not found \n", args[0])
 
-		return shim.Error("Parsel not found")
+		return shim.Error("Bpack not found")
 	}
-	parsel := Parsel{}
+	bpack := Bpack{}
 
-	json.Unmarshal(parselAsBytes, &parsel)
+	json.Unmarshal(bpackAsBytes, &bpack)
 
 	// Normally check that the specified argument is a valid holder of parsel
 	// we are skipping this check for this example
-	if parsel.ReceiverTS != "" {
+	// if parsel.ReceiverTS != "" {
 
-		fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])
+	// 	fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])
 
-		return shim.Error("Already delivered")
-	}
+	// 	return shim.Error("Already delivered")
+	// }
 
-	parsel.ReceiverTS = time.Now().Format(time.RFC3339)
+	bpack.HolderTS = time.Now().Format(time.RFC3339)
+	bpack.Status   = "TRANSFUSED"
 
-	parselAsBytes, _ = json.Marshal(parsel)
-	err := APIstub.PutState(args[0], parselAsBytes)
+	bpackAsBytes, _ = json.Marshal(bpack)
+	err := APIstub.PutState(args[0], bpackAsBytes)
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change status of parsel: %s", args[0]))
+		return shim.Error(fmt.Sprintf("Failed to change status of bpack: %s", args[0]))
 	}
 
-	fmt.Printf("- deliveryParsel:\n%s\n", parselAsBytes)
+	fmt.Printf("- doTransfuse:\n%s\n", bpackAsBytes)
 
 	return shim.Success(nil)
 }

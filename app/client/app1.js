@@ -19,6 +19,11 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_bpack_history").hide();
 	$("#bpack_history").hide();
 
+
+	$("#success_transfuse").hide();
+
+
+
 //	$("#all_users").hide();
 
 //	$("#error_add_group").hide();
@@ -70,8 +75,8 @@ app.controller('appController', function ($scope, appFactory) {
 		  }
 		});
 
-		$("#history_parsel").hide();
-		$("#query_parsel").hide();
+		
+		
 		$("#sender_parsels").hide();
 		$("#error_id_delete_parsel").hide();
 	    $("#error_not_delivered").hide();
@@ -80,7 +85,7 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#parsel_history_header").hide();
 		$("#parsel_history").hide();
 
-		$("#all_parsels").show();
+		$("#success_transfuse").hide();
 	}
 
 	$scope.getBpackHistory = function(bpack){
@@ -115,13 +120,35 @@ app.controller('appController', function ($scope, appFactory) {
 	      }
 		});
 
+		$("#success_transfuse").hide();
 		$("#bpack_history_header").show();
 		$("#bpack_history").show();
 		$("#history_parsel_id").show();
 	}
     
 
+	$scope.doTransfuse = function (bpack) {
 	
+		var bpackId = bpack.Key;
+
+		appFactory.doTransfuse(bpackId, function (data) {
+
+			$scope.transfuse_result = data;
+			
+			$("#error_id_delete_bpack").hide();
+			$("#success_transfuse").show();
+
+			if ($scope.transfuse_result == "Error: Parsel not found") {
+				$("#error_id_delete_parsel").show();
+		    	$("#success_transfuse").hide();
+			
+			} else if ($scope.transfuse_result == "Error: Not delivered") {
+				$("#error_id_delete_parsel").hide();
+				$("#success_transfuse").hide();
+		    	
+        	} 
+		});
+	}
 	
 	$scope.deleteBpack = function (bpack) {
 	
@@ -133,6 +160,7 @@ app.controller('appController', function ($scope, appFactory) {
 			
 			$("#error_id_delete_bpack").hide();
 			$("#success_delete").show();
+			$("#success_transfuse").hide();
 
 			if ($scope.delete_parsel == "Error: Parsel not found") {
 				$("#error_id_delete_parsel").show();
@@ -169,6 +197,13 @@ app.factory('appFactory', function ($http) {
 			callback(output)
 		});
 	}
+
+	factory.doTransfuse = function(bpackId, callback){
+    	$http.get('/do_transfuse/'+bpackId).success(function(output){
+			callback(output)
+		});
+	}
+
 
 	factory.deleteBpack = function(bpackId, callback){
     	$http.get('/delete_bpack/'+bpackId).success(function(output){

@@ -354,6 +354,31 @@ return{
 	},
 
 
+	do_transfuse: function(req, res){ 
+
+		console.log("put a timestamp, changing owner of bpack on transfuse: ");
+
+		//var array = req.params.bpackId("-");
+		//var bpack = array[0]
+		
+
+		var bpackId = req.params.bpackId;
+
+		//console.log(array);
+
+		var transfusion = {
+            BpackId: bpackId
+       	};
+
+        // Retrieve Blockchain Parameter Mapping Model
+		// param(s): record, chaincodeId, chaincodeFunction, channelId
+		var model = GetRecordMapModel(transfusion, 'bpacks', 'doTransfuse', 'bpack-channel');
+		
+		console.log(" The model before write to the ledger: ",  model);
+		
+		WriteToLedger(model, res);
+	},
+
 	delivery_parsel: function(req, res){ 
 
 		console.log("put a timestamp, changing owner of parsel on delivery: ");
