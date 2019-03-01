@@ -52,14 +52,12 @@ type Bpack struct {
 	Btype          string `json:"btype"`
 	DonorId        string `json:"donorId"`
 	DonationTS     string `json:"donationTS"`
+	Amount         string `json:"amount"`
 	Location       string `json:"location"` 
 	Holder				 string `json:"holder"`
 	HolderTS			 string `json:"holderTS"`
   Status         string `json:"status"`
 	Desc           string `json:"desc"`
-
-	//CourierId      string `json:"courierId"`
-	//CourierTS      string `json:"courierTS"` 
 	
 }
 
@@ -99,8 +97,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Route to the appropriate handler function to interact with the ledger
 	if function == "initLedger" {
 		return s.initLedger(APIstub)
-	} else if function == "createParselOrder" {
-		return s.createParselOrder(APIstub, args)
+	} else if function == "addDonation" {
+		return s.addDonation(APIstub, args)
 	} else if function == "queryBpackByBtype" {
 		return s.queryBpackByBtype(APIstub, args)
 	} else if function == "doTransfuse" {
@@ -124,8 +122,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	bpacks := []Bpack{
-		Bpack{Btype: "Apos", DonorId: "1234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "50.000, 30.000", Holder: "BankOne", Status: "TESTED", Desc: "Campus One compain"},
-		Bpack{Btype: "Apos", DonorId: "2234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "51.000, 31.000", Holder: "BankOne", Status: "DRAWN",  Desc: "Campus One compain"},
+		Bpack{Btype: "Apos", DonorId: "1234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "50.000, 30.000", Amount: "200", Holder: "BankOne", Status: "TESTED", Desc: "Campus One compain"},
+		Bpack{Btype: "Apos", DonorId: "2234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "51.000, 31.000", Amount: "350", Holder: "BankOne", Status: "DRAWN",  Desc: "Campus One compain"},
 		
 	}
 
@@ -143,45 +141,24 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 }
 
 /*
-  * The queryParsel method *
-  Used to view the records of one particular parsel
-  It takes one argument -- the key for the parsel in question
+  * The addBpack (Add donation) method
 */
-func (s *SmartContract) queryParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) addDonation(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	parselAsBytes, err := APIstub.GetState(args[0])
-	if err != nil {
-		return shim.Error("Could not locate parsel")
-	}
-
-	fmt.Printf("- queryParsel:\n%s\n", parselAsBytes)
-
-	return shim.Success(parselAsBytes)
-}
-
-/*
-  * The createParselOrder method
-*/
-func (s *SmartContract) createParselOrder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-	 if len(args) != 4 {
-	 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	 if len(args) != 5 {
+	 	return shim.Error("Incorrect number of arguments. Expecting 5")
 	 }
 
-	 var parsel = Parsel{SenderId: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), ReceiverId: args[2], ReceiverBranch: args[3], ReceiverTS: "", CourierId: "", CourierTS:"" }
+	 var bpack = Bpack{DonorId: args[0], Btype: args[1], DonationTS: time.Now().Format(time.RFC3339), Amount: args[2], Holder: args[3], Status: "DRAWN", Location: args[4], Desc: args[5]}
 
-	 parselAsBytes, _ := json.Marshal(parsel)
-	 err := APIstub.PutState(randomId(), parselAsBytes)
+	 bpackAsBytes, _ := json.Marshal(bpack)
+	 err := APIstub.PutState(randomId(), bpackAsBytes)
 
 	  if err != nil {
-	 	return shim.Error(fmt.Sprintf("Failed to record new parsel: %s", args[0]))
-	 }
+	 	   return shim.Error(fmt.Sprintf("Failed to record new bpack for donorID: %s", args[0]))
+	  }
 
-	fmt.Printf("- createParselOrder:\n%s\n", parselAsBytes)
+	fmt.Printf("- addBpack:\n%s\n", bpackAsBytes)
 
 	return shim.Success(nil)
 }

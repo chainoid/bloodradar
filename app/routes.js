@@ -30,6 +30,10 @@ module.exports = function(app){
     radar.get_donor_by_id(req, res);
   });
 
+  // Blood Camp Page
+  app.get('/add_donation/:donation', function(req, res){
+    radar.add_donation(req, res);
+  });
 
   // Hospital
   app.get('/query_bpack_by_btype/:queryParams', function(req, res){
@@ -44,9 +48,7 @@ module.exports = function(app){
   app.get('/get_parsel/:id', function(req, res){
     radar.get_parsel(req, res);
   });
-  app.get('/add_parsel/:parsel', function(req, res){
-    radar.add_parsel(req, res);
-  });
+  
   app.get('/get_all_parsels', function(req, res){
     radar.get_all_parsels(req, res);
   });
