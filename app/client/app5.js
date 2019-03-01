@@ -7,25 +7,25 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Client's page
+	// Donor profile
 	$("#error_query_donors_by_type").hide();
-	$("#donors_by_btype").hide();
+	$("#donor_profile").hide();
 
 
 	$("#error_query_range").hide();
-	$("#ranged_clients").hide();
+	$("#donor_activity").hide();
 	
 
-	$("#new_donor_button_panel").show();
-	$("#add_donor_panel").hide();
-	$("#success_add_donor").hide();
-	$("#success_update_donor").hide();
+	//$("#new_donor_button_panel").show();
+	//$("#add_donor_panel").hide();
+	//$("#success_add_donor").hide();
+	//$("#success_update_donor").hide();
 
 	
-	$("#error_donor_history").hide();
-	$("#header_history").show();
-	$("#donor_history_header").hide();
-	$("#donor_history").hide();
+	//$("#error_donor_history").hide();
+	//$("#header_history").show();
+	//$("#donor_history_header").hide();
+	//$("#donor_history").hide();
 
 
     $scope.getDonorById = function () {
@@ -39,12 +39,12 @@ app.controller('appController', function ($scope, appFactory) {
 			if ($scope.selected_donor == "Donor record not found"){
 				console.log()
 				//$("#error_user_record").show();
-				//$("#user_record").hide();
+				$("#donor_profile").hide();
 				//$("#user_record2").hide();
 				
 			} else{
 				//$("#error_user_record").hide();
-				//$("#user_record").show();
+				$("#donor_profile").show();
 				//$("#user_record2").show();
 			}
 		});
@@ -89,23 +89,23 @@ app.controller('appController', function ($scope, appFactory) {
 	}
 
 
-	$scope.getUserRecord = function () {
+	$scope.getDonorRecord = function () {
 		
 		var id = $scope.id;
 
-		appFactory.getUserRecord(id, function(data){
+		appFactory.getDonorRecord(id, function(data){
 
 			$scope.user_record = data;
 
 			if ($scope.user_record == "User record not found"){
 				console.log()
 				$("#error_user_record").show();
-				$("#user_record").hide();
+				$("#donor_activity").hide();
 				$("#user_record2").hide();
 				
 			} else{
 				$("#error_user_record").hide();
-				$("#user_record").show();
+				$("#donor_activity").show();
 				$("#user_record2").show();
 			}
 		});
@@ -136,7 +136,7 @@ app.factory('appFactory', function ($http) {
 		});
     }
 
-	factory.getUserRecord = function (id, callback) {
+	factory.getDonorRecord = function (id, callback) {
 		$http.get('/get_user_record/' + id).success(function (output) {
 			callback(output)
 		});

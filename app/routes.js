@@ -49,4 +49,9 @@ module.exports = function(app){
   app.get('/delete_parsel/:parselId', function(req, res){
     radar.delete_parsel(req, res);
   });
+
+ // Hospital
+  app.get('/query_bpack_by_btype/:queryParams', function(req, res){
+    radar.query_bpack_by_btype(req, res);
+  });
 }

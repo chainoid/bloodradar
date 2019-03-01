@@ -30,7 +30,7 @@ import (
 type SmartContract struct {
 }
 
-/* Define Parsel structure, with several properties.
+/* Define Donor structure, with several properties.
 Structure tags are used by encoding/json library
 */
 type Donor struct {
@@ -41,7 +41,21 @@ type Donor struct {
 	Age            string `json:"age"`
 	Sex            string `json:"sex"`
 	Btype          string `json:"btype"`
+	DonationList []Donation `json:"donationList"`
 }
+
+
+/* Define Donation structure, with several properties.
+   Structure tags are used by encoding/json library
+*/
+type Donation struct {
+	DonationsTS    string `json:"donationTS"`
+  Location       string `json:"location"` 
+  Status         string `json:"status"`
+	Desc           string `json:"desc"`
+}
+
+
 
 /*
  *  The random Id generator 

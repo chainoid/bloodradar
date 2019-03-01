@@ -87,8 +87,21 @@
 
     <!--  Get filtered by btype items from bpack channel-->
     <div class="form-group">
-      <label>Query All Parsels in System</label>
-      <p><input id="queryAllParsels" type="submit" value="Query" class="btn btn-success" ng-click="queryAllParsels()"></p>
+      <label>Query available bpacks</label>
+      <div class="form-group"> 
+        <label for="sel1">Select blood type:</label>
+        <select class="form-control input-field" id="btype" ng-model="queryParams.btype">
+          <option>Apos</option>
+          <option>Bpos</option>
+          <option>ABpos</option>
+          <option>Opos</option>
+          <option>Aneg</option>
+          <option>Bneg</option>
+          <option>ABneg</option>
+          <option>Oneg</option>
+        </select>
+      </div>
+      <p><input id="queryBpackByBtype" type="submit" value="Query" class="btn btn-success" ng-click="queryBpackByBtype()"></p>
     </div>
 
     <div class="alert alert-danger" role="alert" id="error_query_all">
@@ -107,29 +120,31 @@
       Parsel deleted successfully 
     </div>
 
-    <table id="all_parsels" class="table" align="center">
+    <table id="selected_bpacks" class="table" align="center">
       <tr>
         <th>ID</th>
-        <th>Sender ID</th>
-        <th>Sender TS</th>
-        <th>Sender Branch</th>
-        <th>Courier ID</th>
-        <th>Courier TS</th>
-        <th>Receiver ID</th>
-        <th>Receiver Branch</th>
-        <th>Receiver TS</th>
+        <th>Blood type</th>
+        <th>Status</th>
+        <th>Donor ID</th>
+        <th>Donation TS</th>
+        <th>Location</th>
+        <th>Holder</th>
+        <th>Desc</th>
+        <!-- <th>Receiver Branch</th>
+        <th>Receiver TS</th> -->
         <th></th>
-      <tr ng-repeat="parsel in all_parsels">
-        <td>{{parsel.Key}}</td>
-        <td>{{parsel.senderId}}</td>
-        <td>{{parsel.senderTS}}</td>
-        <td>{{parsel.senderBranch}}</td>
-        <td>{{parsel.courierId}}</td>
-        <td>{{parsel.courierTS}}</td>
-        <td>{{parsel.receiverId}}</td>
-        <td>{{parsel.receiverBranch}}</td>
-        <td>{{parsel.receiverTS}}</td>
-        <td>  <!-- Action button -->
+      <tr ng-repeat="bpack in selected_bpacks">
+        <td>{{bpack.Key}}</td>
+        <td>{{bpack.btype}}</td>
+        <td>{{bpack.status}}</td>
+        <td>{{bpack.donorId}}</td>
+        <td>{{bpack.donationTS}}</td>
+        <td>{{bpack.location}}</td>
+        <td>{{bpack.holder}}</td>
+        <td>{{bpack.desc}}</td>
+        <!-- <td>{{pabpackrsel.receiverBranch}}</td>
+        <td>{{bpack.receiverTS}}</td> -->
+        <td>  
           <div class="dropdown">
           <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Action

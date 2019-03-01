@@ -44,6 +44,27 @@ type Parsel struct {
 	ReceiverBranch string `json:"receiverBranch"`
 }
 
+
+/* Define Bpack structure, with several properties.
+Structure tags are used by encoding/json library
+*/
+type Bpack struct {
+	Btype          string `json:"btype"`
+	DonorId        string `json:"donorId"`
+	DonationTS     string `json:"donationTS"`
+	Location       string `json:"location"` 
+	Holder				 string `json:holder`
+  Status         string `json:"status"`
+	Desc           string `json:"desc"`
+
+	//CourierId      string `json:"courierId"`
+	//CourierTS      string `json:"courierTS"` 
+	//ReceiverId     string `json:"receiverId"`
+	//ReceiverTS     string `json:"receiverTS"`
+	
+}
+
+
 /*
  *  The random Id generator 
 */
@@ -77,14 +98,12 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Retrieve the requested Smart Contract function and arguments
 	function, args := APIstub.GetFunctionAndParameters()
 	// Route to the appropriate handler function to interact with the ledger
-	if function == "queryParsel" {
-		return s.queryParsel(APIstub, args)
-	} else if function == "initLedger" {
+	if function == "initLedger" {
 		return s.initLedger(APIstub)
 	} else if function == "createParselOrder" {
 		return s.createParselOrder(APIstub, args)
-	} else if function == "queryAllParsels" {
-		return s.queryAllParsels(APIstub)
+	} else if function == "queryBpackByBtype" {
+		return s.queryBpackByBtype(APIstub, args)
 	} else if function == "deliveryParsel" {
 		return s.deliveryParsel(APIstub, args)
 	} else if function == "clientSentParsels" {
@@ -109,21 +128,19 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
  Will add test data (5 parsels)to our network
 */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	parsels := []Parsel{
-		Parsel{SenderId: "A1", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "001", CourierId: "INIT", CourierTS: "",  ReceiverId: "M01", ReceiverTS: "", ReceiverBranch: "101"},
-		Parsel{SenderId: "A2", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "002", CourierId: "", CourierTS: "",  ReceiverId: "MR2", ReceiverTS: "", ReceiverBranch: "201"},
-		Parsel{SenderId: "A3", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "003", CourierId: "", CourierTS: "",  ReceiverId: "MR3", ReceiverTS: "", ReceiverBranch: "301"},
-		Parsel{SenderId: "A4", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "004", CourierId: "", CourierTS: "",  ReceiverId: "MR4", ReceiverTS: "", ReceiverBranch: "301"},
-    	Parsel{SenderId: "Alex", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", CourierId: "", CourierTS: "",  ReceiverId: "Ben", ReceiverTS: "", ReceiverBranch: "101"},
+	bpacks := []Bpack{
+		Bpack{Btype: "Apos", DonorId: "1234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "50.000, 30.000", Holder: "BankOne", Status: "TESTED", Desc: "Campus One compain"},
+		Bpack{Btype: "Apos", DonorId: "2234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "51.000, 31.000", Holder: "BankOne", Status: "DRAWN",  Desc: "Campus One compain"},
+		
 	}
 
 	i := 0
-	for i < len(parsels) {
+	for i < len(bpacks) {
 		fmt.Println("i is ", i)
-		parselAsBytes, _ := json.Marshal(parsels[i])
+		bpackAsBytes, _ := json.Marshal(bpacks[i])
 
-		APIstub.PutState(randomId(), parselAsBytes)
-		fmt.Println("Added", parsels[i])
+		APIstub.PutState(randomId(), bpackAsBytes)
+		fmt.Println("Added", bpacks[i])
 		i = i + 1
 	}
 
@@ -179,7 +196,7 @@ func (s *SmartContract) createParselOrder(APIstub shim.ChaincodeStubInterface, a
  allows for assessing all the records added to the ledger(all parsels in the delivery system)
  This method does not take any arguments. Returns JSON string containing results.
 */
-func (s *SmartContract) queryAllParsels(APIstub shim.ChaincodeStubInterface) sc.Response {
+func (s *SmartContract) queryBpackByBtype(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	startKey := "0"
 	endKey := "9999"
@@ -200,6 +217,15 @@ func (s *SmartContract) queryAllParsels(APIstub shim.ChaincodeStubInterface) sc.
 		if err != nil {
 			return shim.Error(err.Error())
 		}
+
+  // Create an object
+    bpack := Bpack{}
+  // Unmarshal record to parsel
+  json.Unmarshal(queryResponse.Value, &bpack)
+
+  // Add only filtered by btype
+  if bpack.Btype == args[0] {
+
 		// Add comma before array members,suppress it for the first array member
 		if bArrayMemberAlreadyWritten == true {
 			buffer.WriteString(",")
@@ -215,9 +241,11 @@ func (s *SmartContract) queryAllParsels(APIstub shim.ChaincodeStubInterface) sc.
 		buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
 	}
+	}
+
 	buffer.WriteString("]")
 
-	fmt.Printf("- queryAllParsels:\n%s\n", buffer.String())
+	fmt.Printf("- queryBpackByBtype:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }

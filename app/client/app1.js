@@ -42,13 +42,13 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#success_delete").hide();	
 
 
-	$scope.queryAllParsels = function(){
+	$scope.queryBpackByBtype = function(){
 
-		appFactory.queryAllParsels(function(data){
+		appFactory.queryBpackByBtype($scope.queryParams, function(data){
 
-			$scope.query_all_parsels = data;
+			$scope.selected_bpacks = data;
 
-			if ($scope.query_all_parsels == "Error of query request"){
+			if ($scope.selected_bpacks == "Error of query request"){
 				console.log()
 				$("#error_query_all").show();
 				$("#all_parsels").hide();
@@ -64,9 +64,9 @@ app.controller('appController', function ($scope, appFactory) {
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
+			    return a.donationTS.localeCompare(b.donationTS);
 			});
-			$scope.all_parsels = array;
+			$scope.selected_bpacks = array;
 		  }
 		});
 
@@ -172,9 +172,12 @@ app.factory('appFactory', function ($http) {
 
 	var factory = {};
 
-	factory.queryAllParsels = function (callback) {
+	factory.queryBpackByBtype = function (queryParams, callback) {
 
-		$http.get('/get_all_parsels/').success(function (output) {
+
+		var params = queryParams.btype; // parselId + "-" + input.branchId;
+
+		$http.get('/query_bpack_by_btype/'+params).success(function (output) {
 			callback(output)
 		});
 	}

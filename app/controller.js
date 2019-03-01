@@ -58,6 +58,27 @@ return{
 		ReadFromLedger(model, res);	    
 	},
 
+
+	query_bpack_by_btype: function(req, res){
+
+		console.log("query bpacks by btype: ");
+
+
+		var array = req.params.queryParams.split("-");
+		
+		var btype = array[0];
+		
+		var queryBpackByBtypeParams = {
+			Btype:    btype
+		};
+
+		var model = GetRecordMapModel(queryBpackByBtypeParams, 'bpacks', 'queryBpackByBtype', 'bpack-channel');
+
+		ReadFromLedger(model, res);	    
+	},
+
+
+
 	get_donor_by_id: function(req, res){
 
 		console.log("get donor by id: ");

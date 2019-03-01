@@ -111,22 +111,7 @@
       <div class="alert alert-danger" role="alert" id="error_donor_history">
         Error: Cannot load history for this Donor
       </div>
-  
-      <!-- <table id="donor_history_header" class="table" align="center">
-         <tr>
-          <th>Donor ID</th>
-          <th>SSN</th>
-          <th>Sex</th>
-          <th>Blood type</th>
-         </tr>
-         <tr>
-          <td>{{selected_donor.Key}}</td>
-          <td>{{selected_donor.ssn}}</td>
-          <td>{{selected_donor.sex}}</td>
-          <td>{{selected_donor.btype}}</td>
-         </tr>
-      </table> -->
-  
+    
       <table id="donor_history" class="table" align="center">
         <tr>
           <th>Tx Timestamp</th>
@@ -151,11 +136,35 @@
 
       <div class="form-group"  id="header_activity" >
           <label>List of Donor activity</label><br>
-          Donor ID: <input class="form-control input-field" type="text" placeholder=" Ex: 0" ng-model="donor.Key"> 
-          <p><input id="queryAllParsels" type="submit" value="Query" class="btn btn-success" ng-click="getDonorActivity(donor)"></p>
+          <p><input id="gitDonorActivity" type="submit" value="Activity" class="btn btn-success" ng-click="getDonorActivity(donorId)"></p>
       </div>
 
+      <table id="donor_activity" class="table" align="center">
+        <tr>
+         <th>Donation Id</th>
+         <th>Location</th>
+         <th>Status</th>
+         <th>Desc</th>
+         <!--
+         <th>Sex</th>
+         <th>Age</th>
+         <th>Blood type</th>
+         -->
+        </tr>
+        <tr ng-repeat="act in donor_activity">
+         <td>{{act.Key}}</td>
+         <td>{{act.location}}</td>
+         <td>{{act.status}}</td>
+         <td>{{act.desc}}</td>
+         <!--
+         <td>{{activity.sex}}</td>
+         <td>{{activity.age}}</td>
+         <td>{{activity.btype}}</td>
+         -->
+        </tr>
+     </table>
 
+        
 
      
       <div class="dropdown dropup">
