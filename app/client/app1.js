@@ -7,59 +7,61 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Parsel page
-	$("#all_parsels").hide();
+	// Hospital page
+	$("#selected_bpacks").hide();
 
-	$("#error_query_all").hide();
+	$("#error_no_data_found").hide();
+	$("#error_query_btype").hide();
 
-	$("#history_header").hide();
-	$("#parsel_history_header").hide();
-	$("#error_parsel_history").hide();
-	$("#parsel_history").hide();
 
-	$("#all_users").hide();
 
-	$("#error_add_group").hide();
-	$("#success_add_group").hide();
 
-	$("#error_add_user").hide();
-	$("#success_add_user").hide();
+//	$("#history_header").hide();
+//	$("#parsel_history_header").hide();
+//	$("#error_parsel_history").hide();
+//	$("#parsel_history").hide();
 
-	$("#success_generated").hide();
-	$("#error_generated").hide();
+//	$("#all_users").hide();
+
+//	$("#error_add_group").hide();
+//	$("#success_add_group").hide();
+
+//	$("#error_add_user").hide();
+//	$("#success_add_user").hide();
+
+//	$("#success_generated").hide();
+//	$("#error_generated").hide();
 	
 
-	$("#error_query").hide();
-	$("#error_sender").hide();
-	$("#error_query_id").hide();
-	$("#error_query_student").hide();
-	$("#error_prepare_delivery").hide();
-	$("#error_pass_exam").hide();
-	$("#error_student_record").hide();
+//	$("#error_query").hide();
+//	$("#error_sender").hide();
+//	$("#error_query_id").hide();
+//	$("#error_query_student").hide();
+//	$("#error_prepare_delivery").hide();
+//	$("#error_pass_exam").hide();
+//	$("#error_student_record").hide();
 	
-	$("#error_id_delete_parsel").hide();
-	$("#error_not_delivered").hide();
-	$("#success_delete").hide();	
+//	$("#error_id_delete_parsel").hide();
+//	$("#error_not_delivered").hide();
+//	$("#success_delete").hide();	
 
 
 	$scope.queryBpackByBtype = function(){
 
 		appFactory.queryBpackByBtype($scope.queryParams, function(data){
 
-			$scope.selected_bpacks = data;
-
-			if ($scope.selected_bpacks == "Error of query request"){
+			
+			if (data == "Error: No data found"){
 				console.log()
-				$("#error_query_all").show();
-				$("#all_parsels").hide();
+				$("#error_no data_found").show();
+				$("#selected_bpacks").hide();
 				
 			} else{
-				$("#all_parsels").show();
+				$("#selected_bpacks").show();
 				$("#error_query_all").hide();
 			
 			var array = [];
 			for (var i = 0; i < data.length; i++){
-				//parseInt(data[i].Key);
 				data[i].Record.Key = data[i].Key;
 				array.push(data[i].Record);
 			}
@@ -175,7 +177,7 @@ app.factory('appFactory', function ($http) {
 	factory.queryBpackByBtype = function (queryParams, callback) {
 
 
-		var params = queryParams.btype; // parselId + "-" + input.branchId;
+		var params = queryParams.btype + "-" + queryParams.status;
 
 		$http.get('/query_bpack_by_btype/'+params).success(function (output) {
 			callback(output)

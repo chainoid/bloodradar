@@ -53,7 +53,7 @@ type Bpack struct {
 	DonorId        string `json:"donorId"`
 	DonationTS     string `json:"donationTS"`
 	Location       string `json:"location"` 
-	Holder				 string `json:holder`
+	Holder				 string `json:"holder"`
   Status         string `json:"status"`
 	Desc           string `json:"desc"`
 
@@ -224,7 +224,7 @@ func (s *SmartContract) queryBpackByBtype(APIstub shim.ChaincodeStubInterface, a
   json.Unmarshal(queryResponse.Value, &bpack)
 
   // Add only filtered by btype
-  if bpack.Btype == args[0] {
+  if bpack.Btype == args[0] && (bpack.Status == args[1] || args[1] == "ALL") {
 
 		// Add comma before array members,suppress it for the first array member
 		if bArrayMemberAlreadyWritten == true {

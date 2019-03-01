@@ -89,7 +89,7 @@
     <div class="form-group">
       <label>Query available bpacks</label>
       <div class="form-group"> 
-        <label for="sel1">Select blood type:</label>
+        <label for="btype">Select blood type:</label>
         <select class="form-control input-field" id="btype" ng-model="queryParams.btype">
           <option>Apos</option>
           <option>Bpos</option>
@@ -100,14 +100,28 @@
           <option>ABneg</option>
           <option>Oneg</option>
         </select>
+     <!--
+      </div>
+      <div class="form-group">
+      -->  
+        
+        <label for="statusId">Select status:</label>
+        <select class="form-control input-field" id="statusId" ng-model="queryParams.status">
+          <option>ALL</option>
+          <option>TESTED</option>
+        </select>
       </div>
       <p><input id="queryBpackByBtype" type="submit" value="Query" class="btn btn-success" ng-click="queryBpackByBtype()"></p>
     </div>
 
-    <div class="alert alert-danger" role="alert" id="error_query_all">
+    <!-- <div class="alert alert-danger" role="alert" id="error_query_all">
       Error of query request
-    </div>
+    </div> -->
     
+    <div class="alert alert-info" role="alert" id="error_no_data_found">
+      No data found
+    </div>
+
     <div class="alert alert-danger" role="alert" id="error_id_delete_parsel">
       Error Id for delete request
     </div>
@@ -150,12 +164,16 @@
             Action
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="service.html"> Accept</a> <br/>
+
+            <a class="dropdown-item" href="" ng-click="getBpackHistory(bpack)"> Show history</a> <br/>
+
+
+            <!-- <a class="dropdown-item" href="service.html"> Accept</a> <br/>
             <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
             <a class="dropdown-item" href="service.html"> Return</a> <br/>
-            <a class="dropdown-item" href="service.html"> Delivery</a> <br/>
-            <a class="dropdown-item" href="" ng-click="getParselHistory(parsel)"> History</a> <br/>
-            <a class="dropdown-item" href="" ng-click="deleteParsel(parsel)"> Delete</a> <br/>
+            <a class="dropdown-item" href="service.html"> Delivery</a> <br/> -->
+            
+            <a class="dropdown-item" href="" ng-click="deleteBpack(bpack)"> Delete</a> <br/>
           </div>
         </div></td>
       </tr>

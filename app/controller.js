@@ -66,10 +66,13 @@ return{
 
 		var array = req.params.queryParams.split("-");
 		
-		var btype = array[0];
+		var btype  = array[0];
 		
+		var status = array[1];
+
 		var queryBpackByBtypeParams = {
-			Btype:    btype
+			Btype:    btype,
+			Status:   status
 		};
 
 		var model = GetRecordMapModel(queryBpackByBtypeParams, 'bpacks', 'queryBpackByBtype', 'bpack-channel');
