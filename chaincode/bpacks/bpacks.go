@@ -97,8 +97,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	// Route to the appropriate handler function to interact with the ledger
 	if function == "initLedger" {
 		return s.initLedger(APIstub)
-	} else if function == "addDonation" {
-		return s.addDonation(APIstub, args)
+	} else if function == "addBpack" {
+		return s.addBpack(APIstub, args)
 	} else if function == "queryBpackByBtype" {
 		return s.queryBpackByBtype(APIstub, args)
 	} else if function == "doTransfuse" {
@@ -143,7 +143,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 /*
   * The addBpack (Add donation) method
 */
-func (s *SmartContract) addDonation(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) addBpack(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	 if len(args) != 6 {
 	 	return shim.Error("Incorrect number of arguments. Expecting 6")

@@ -273,7 +273,7 @@ return{
 
         // Retrieve Blockchain Parameter Mapping Model
 		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(donationParams, 'bpacks', 'addDonation', 'bpack-channel');
+		var model = GetRecordMapModel(donationParams, 'bpacks', 'addBpack', 'bpack-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		

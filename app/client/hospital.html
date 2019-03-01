@@ -154,13 +154,8 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
             <b><a class="dropdown-item" href="" ng-click="doTransfuse(bpack)">Transfuse</a></b><br/>
+            <a class="dropdown-item" href="" ></a> <br/>
             <a class="dropdown-item" href="" ng-click="getBpackHistory(bpack)"> Show history</a> <br/>
-           
-            <!-- <a class="dropdown-item" href="service.html"> Accept</a> <br/>
-            <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
-            <a class="dropdown-item" href="service.html"> Return</a> <br/>
-            <a class="dropdown-item" href="service.html"> Delivery</a> <br/> -->
-            
             <a class="dropdown-item" href="" ng-click="deleteBpack(bpack)"> Delete</a> <br/>
           </div>
         </div></td>
@@ -182,18 +177,11 @@
        <tr>
         <th>Donor ID</th>
         <th>Donation TS</th>
-        <th>Sender TS</th>
-        <th>Receiver ID</th>
-       
        </tr>
        <tr>
         <td>{{selected_bpack.donorId}}</td>
         <td>{{selected_bpack.donationTS}}</td>
-        <td>{{selected_bpack.senderTS}}</td>
-        <td>{{selected_bpack.receiverId}}</td>
-       
        </tr>
-
     </table>
 
     <table id="bpack_history" class="table" align="center">

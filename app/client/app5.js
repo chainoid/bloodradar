@@ -22,7 +22,7 @@ app.controller('appController', function ($scope, appFactory) {
 	//$("#success_update_donor").hide();
 
 	
-	//$("#error_donor_history").hide();
+	$("#error_donor_history").hide();
 	//$("#header_history").show();
 	//$("#donor_history_header").hide();
 	//$("#donor_history").hide();
@@ -64,7 +64,7 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#donor_history").hide();
 								
 			} else{
-								
+				$("#error_donor_history").hide();					
 				$("#donor_history_header").show();
 				$("#donor_history").show();
 			

@@ -26,7 +26,6 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#client_rec_parsels").hide();
 	$("#error_no_rec_data_found").hide();
-
 	
 
   $scope.queryDonorData = function () {
@@ -84,69 +83,7 @@ app.controller('appController', function ($scope, appFactory) {
 			$("#add_client_panel").hide();
 		});
 	}
-
-
-    $scope.getClientSentParsels = function (client) {
-
-		var name = client.name;
-
-		appFactory.clientSentParsels(name, function (data) {
 	
-			if (data  == "Error: No data found"){
-				$("#error_no_sent_data_found").show();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
-				$("#error_no_rec_data_found").hide();
-				
-			} else{
-				$("#client_sent_parsels").show();
-				$("#client_rec_parsels").hide();
-				$("#error_no_sent_data_found").hide();
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
-			});
-			$scope.client_sent_parsels = array;
-		  }
-		});
-	}
-
-	 $scope.getClientReceivedParsels = function (client) {
-
-		var name = client.name;
-
-	 	appFactory.clientReceivedParsels(name, function (data) {
-
-			if (data  == "Error: No data found"){
-				$("#error_no_rec_data_found").show();
-				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").hide();
-				
-			} else{
-				$("#error_no_rec_data_found").hide();
-				$("#error_no_sent_data_found").hide();
-				$("#client_sent_parsels").hide();
-				$("#client_rec_parsels").show();
-			
-			  var array = [];
-			  for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
-			});
-			$scope.client_rec_parsels = array;
-			} 
-		});
-	}
-
 
 	$scope.getClientHistory = function (client) {
 
