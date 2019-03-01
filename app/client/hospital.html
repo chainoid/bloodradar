@@ -100,11 +100,6 @@
           <option>ABneg</option>
           <option>Oneg</option>
         </select>
-     <!--
-      </div>
-      <div class="form-group">
-      -->  
-        
         <label for="statusId">Select status:</label>
         <select class="form-control input-field" id="statusId" ng-model="queryParams.status">
           <option>ALL</option>
@@ -113,25 +108,18 @@
       </div>
       <p><input id="queryBpackByBtype" type="submit" value="Query" class="btn btn-success" ng-click="queryBpackByBtype()"></p>
     </div>
-
-    <!-- <div class="alert alert-danger" role="alert" id="error_query_all">
-      Error of query request
-    </div> -->
+    
     
     <div class="alert alert-info" role="alert" id="error_no_data_found">
       No data found
     </div>
 
-    <div class="alert alert-danger" role="alert" id="error_id_delete_parsel">
+    <div class="alert alert-danger" role="alert" id="error_id_delete_bpack">
       Error Id for delete request
     </div>
 
-    <div class="alert alert-danger" role="alert" id="error_not_delivered">
-      The undelivered parsel cannot be deleted 
-    </div>
-
     <div class="alert alert-success" role="alert" id="success_delete">
-      Parsel deleted successfully 
+      Bpack deleted successfully {{bpack.Key}}
     </div>
 
     <table id="selected_bpacks" class="table" align="center">
@@ -144,9 +132,7 @@
         <th>Location</th>
         <th>Holder</th>
         <th>Desc</th>
-        <!-- <th>Receiver Branch</th>
-        <th>Receiver TS</th> -->
-        <th></th>
+          <th></th>
       <tr ng-repeat="bpack in selected_bpacks">
         <td>{{bpack.Key}}</td>
         <td>{{bpack.btype}}</td>
@@ -156,8 +142,6 @@
         <td>{{bpack.location}}</td>
         <td>{{bpack.holder}}</td>
         <td>{{bpack.desc}}</td>
-        <!-- <td>{{pabpackrsel.receiverBranch}}</td>
-        <td>{{bpack.receiverTS}}</td> -->
         <td>  
           <div class="dropdown">
           <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -181,48 +165,54 @@
 
 
     <div class="form-group" id="history_header" >
-      <label>Query History of Parsel</label>
+      <label>History of Bpack</label>
       <!-- Enter a parsel ID: <input id="parselID" class="form-control input-field" type="text" placeholder=" Ex: 2" ng-model="historyId">
       <input id="historyParsel" type="submit" value="History" class="btn btn-primary" ng-click="historyParsel()"> -->
     </div>
 
-    <div class="alert alert-danger" role="alert" id="error_parsel_history">
-      Error: Cannot load history for this Parsel ID
+    <div class="alert alert-danger" role="alert" id="error_bpack_history">
+      Error: Cannot load history for this Bpack ID
     </div>
 
-    <table id="parsel_history_header" class="table" align="center">
+    <table id="bpack_history_header" class="table" align="center">
        <tr>
-        <th>Sender ID</th>
-        <th>Sender Branch</th>
+        <th>Donor ID</th>
+        <th>Donation TS</th>
         <th>Sender TS</th>
         <th>Receiver ID</th>
         <th>Receiver Branch</th>
         <th>Receiver TS</th>
        </tr>
        <tr>
-        <td>{{selected_parsel.senderId}}</td>
-        <td>{{selected_parsel.senderBranch}}</td>
-        <td>{{selected_parsel.senderTS}}</td>
-        <td>{{selected_parsel.receiverId}}</td>
-        <td>{{selected_parsel.receiverBranch}}</td>
-        <td>{{selected_parsel.receiverTS}}</td>
+        <td>{{selected_bpack.donorId}}</td>
+        <td>{{selected_bpack.donationTS}}</td>
+        <td>{{selected_bpack.senderTS}}</td>
+        <td>{{selected_bpack.receiverId}}</td>
+        <td>{{selected_bpack.receiverBranch}}</td>
+        <td>{{selected_bpack.receiverTS}}</td>
        </tr>
 
     </table>
 
-    <table id="parsel_history" class="table" align="center">
+    <table id="bpack_history" class="table" align="center">
       <tr>
         <th>Tx Timestamp</th>
         <th>Tx Id</th>
-        <th>Courier</th>
-        <th>Courier Timestamp</th>
+        <th>Holder</th>
+        <th>Holder Timestamp</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Desctiption</th>
         <th>Deleted</th>
       </tr>
-      <tr ng-repeat="rec in parsel_history">
+      <tr ng-repeat="rec in bpack_history">
         <td>{{rec.TxTS}}</td>
         <td>{{rec.TxId}}</td>
-        <td>{{rec.courierId}}</td> 
-        <td>{{rec.courierTS}}</td>
+        <td>{{rec.holder}}</td>
+        <td>{{rec.holderTS}}</td>
+        <td>{{rec.location}}</td>
+        <td>{{rec.status}}</td>
+        <td>{{rec.desc}}</td>
         <td>{{rec.IsDelete}}</td>  
       </tr>
     </table>

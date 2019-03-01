@@ -14,12 +14,10 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_query_btype").hide();
 
 
-
-
-//	$("#history_header").hide();
-//	$("#parsel_history_header").hide();
-//	$("#error_parsel_history").hide();
-//	$("#parsel_history").hide();
+	$("#history_header").hide();
+	$("#bpack_history_header").hide();
+	$("#error_bpack_history").hide();
+	$("#bpack_history").hide();
 
 //	$("#all_users").hide();
 
@@ -41,9 +39,9 @@ app.controller('appController', function ($scope, appFactory) {
 //	$("#error_pass_exam").hide();
 //	$("#error_student_record").hide();
 	
-//	$("#error_id_delete_parsel").hide();
-//	$("#error_not_delivered").hide();
-//	$("#success_delete").hide();	
+
+	$("#error_id_delete_bpack").hide();
+	$("#success_delete").hide();	
 
 
 	$scope.queryBpackByBtype = function(){
@@ -85,20 +83,20 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#all_parsels").show();
 	}
 
-	$scope.getParselHistory = function(parsel){
+	$scope.getBpackHistory = function(bpack){
 		
-		var parselId = parsel.Key;
+		var bpackId = bpack.Key;
 
-		appFactory.parselHistory(parselId, function(data){
+		appFactory.bpackHistory(bpackId, function(data){
 			
-			if (data  == "No history for parsel"){
+			if (data  == "No history for bpack"){
 				console.log()
-				$("#error_parsel_history").show();
-				$("#parsel_history").hide();
+				$("#error_bpack_history").show();
+				$("#bpack_history").hide();
 			} else{
-				$("#error_parsel_history").hide();
+				$("#error_bpack_history").hide();
 				$("#history_header").show();
-				$("#parsel_history").show();
+				$("#bpack_history").show();
 			
 			var array = [];
 			for (var i = 0; i < data.length; i++){
@@ -112,54 +110,36 @@ app.controller('appController', function ($scope, appFactory) {
 			array.sort(function(a, b) {
 			    return a.TxTS.localeCompare(b.TxTS);
 			});
-			$scope.parsel_history = array;
-			$scope.selected_parsel = parsel;
+			$scope.bpack_history = array;
+			$scope.selected_bpack = bpack;
 	      }
 		});
 
-		$("#parsel_history_header").show();
-		$("#parsel_history").show();
+		$("#bpack_history_header").show();
+		$("#bpack_history").show();
 		$("#history_parsel_id").show();
 	}
     
 
-	$scope.queryAllUsers = function () {
-
-		appFactory.queryAllUsers(function (data) {
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return a.groupName.localeCompare(b.groupName);
-			});
-			$scope.all_users = array;
-			$("#all_users").show();
-		});
-	}
 	
-	$scope.deleteParsel = function (parsel) {
 	
+	$scope.deleteBpack = function (bpack) {
+	
+		var bpackId = bpack.Key;
 
-		var parselId = parsel.Key;
-
-		appFactory.deleteParsel(parselId, function (data) {
+		appFactory.deleteBpack(bpackId, function (data) {
 
 			$scope.delete_parsel = data;
 			
-			$("#error_id_delete_parsel").hide();
-			$("#error_not_delivered").hide();
+			$("#error_id_delete_bpack").hide();
 			$("#success_delete").show();
 
 			if ($scope.delete_parsel == "Error: Parsel not found") {
 				$("#error_id_delete_parsel").show();
-				$("#error_not_delivered").hide();
-				$("#success_delete").hide();
+		    	$("#success_delete").hide();
 			
 			} else if ($scope.delete_parsel == "Error: Not delivered") {
 				$("#error_id_delete_parsel").hide();
-				$("#error_not_delivered").show();
 				$("#success_delete").hide();
 		    	
         	} 
@@ -184,14 +164,14 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	factory.parselHistory = function(parselId, callback){
-    	$http.get('/parsel_history/'+parselId).success(function(output){
+	factory.bpackHistory = function(bpackId, callback){
+    	$http.get('/bpack_history/'+bpackId).success(function(output){
 			callback(output)
 		});
 	}
 
-	factory.deleteParsel = function(parselId, callback){
-    	$http.get('/delete_parsel/'+parselId).success(function(output){
+	factory.deleteBpack = function(bpackId, callback){
+    	$http.get('/delete_bpack/'+bpackId).success(function(output){
 			callback(output)
 		});
 	}

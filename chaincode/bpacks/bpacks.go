@@ -59,8 +59,6 @@ type Bpack struct {
 
 	//CourierId      string `json:"courierId"`
 	//CourierTS      string `json:"courierTS"` 
-	//ReceiverId     string `json:"receiverId"`
-	//ReceiverTS     string `json:"receiverTS"`
 	
 }
 
@@ -110,14 +108,14 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.clientSentParsels(APIstub, args)
 	}  else if function == "clientReceivedParsels" {
 		return s.clientReceivedParsels(APIstub, args)
-	}else if function == "parselHistory" {
-		return s.parselHistory(APIstub, args)
+	}else if function == "bpackHistory" {
+		return s.bpackHistory(APIstub, args)
 	} else if function == "switchCourier" {
 		return s.switchCourier(APIstub, args)
 	} else if function == "acceptParsel" {
 		return s.acceptParsel(APIstub, args)
-	} else if function == "deleteParsel" {
-		return s.deleteParsel(APIstub, args)
+	} else if function == "deleteBpack" {
+		return s.deleteBpack(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -533,42 +531,38 @@ func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args
    The data in the world state can be updated with who has possession.
    This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
 */
-func (s *SmartContract) deleteParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) deleteBpack(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 
-	parselAsBytes, _ := APIstub.GetState(args[0])
-	if parselAsBytes == nil {
+	bpackAsBytes, _ := APIstub.GetState(args[0])
+	if bpackAsBytes == nil {
 
-        fmt.Printf("- deleteParsel with id: %s Parsel not found \n", args[0])
+        fmt.Printf("- deleteBpack with id: %s Bpack not found \n", args[0])
 
-		return shim.Error("Parsel not found")
+		return shim.Error("Bpack not found")
 	}
-	parsel := Parsel{}
 
-	json.Unmarshal(parselAsBytes, &parsel)
 
+	//  TODO  - condition when inpossible delete the bpack 
+	//
+	//parsel := Parsel{}
+  //json.Unmarshal(parselAsBytes, &parsel)
 	// Normally check that the specified argument is a valid holder of parsel
 	// we are skipping this check for this example
-	if parsel.ReceiverTS == "" {
-
-		fmt.Printf("- deleteParsel with id: %s Already delivered \n", args[0])
-
-		return shim.Error("Not delivered")
-	}
-
-	//parsel.ReceiverTS = time.Now().Format(time.RFC3339)
-    //
-    //parselAsBytes, _ = json.Marshal(parsel)
-
-    err := APIstub.DelState(args[0])
+	// if parsel.ReceiverTS == "" {
+	// 	fmt.Printf("- deleteParsel with id: %s Already delivered \n", args[0])
+	// 	return shim.Error("Not delivered")
+	// }
+	
+   err := APIstub.DelState(args[0])
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change status of parsel: %s", args[0]))
+		return shim.Error(fmt.Sprintf("Failed to change status of bpack: %s", args[0]))
 	}
 
-	fmt.Printf("- deleteParsel:\n%s\n", parselAsBytes)
+	fmt.Printf("- deleteBpack:\n%s\n", bpackAsBytes)
 
 	return shim.Success(nil)
 }
@@ -577,7 +571,7 @@ func (s *SmartContract) deleteParsel(APIstub shim.ChaincodeStubInterface, args [
 /*
  * The getHistoryForKey method *
  */
-func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) bpackHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	resultsIterator, err := APIstub.GetHistoryForKey(args[0])
 
@@ -623,10 +617,10 @@ func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args 
 		} else {
 			//buffer.WriteString("{}")
 
-			var parsel = Parsel{SenderId: "", SenderBranch: "", SenderTS: "", ReceiverId: "", ReceiverBranch: "", ReceiverTS: "", CourierId: "", CourierTS:"" }
+			var bpack = Bpack{Btype: "", DonorId: "", DonationTS: "", Location: "", Holder: "", Status: "",  Desc: ""}
 
-			parselAsBytes, _ := json.Marshal(parsel)
-			buffer.WriteString(string(parselAsBytes))
+			bpackAsBytes, _ := json.Marshal(bpack)
+			buffer.WriteString(string(bpackAsBytes))
 
 		}
 
@@ -636,7 +630,7 @@ func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args 
 	}
 	buffer.WriteString("]")
 
-	fmt.Printf("- parselHistory:\n%s\n", buffer.String())
+	fmt.Printf("- bpackHistory:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }

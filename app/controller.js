@@ -28,20 +28,6 @@ module.exports = (function() {
 // **  The Main functionality ** // 
 return{
 	
-	get_all_parsels: function(req, res){
-
-		console.log("getting all parsels from ledger: ");
-		
-		var queryParselListParams = {
-			Key: '' // For now we pass a blank string to query all parsels,
-			        // TODO : add fromKey, toKey
-		};
-
-		var model = GetRecordMapModel(queryParselListParams, 'parsels', 'queryAllParsels', 'parsel-channel');
-
-		ReadFromLedger(model, res);
-	},	
-
 
 	get_donors_by_btype: function(req, res){
 
@@ -352,23 +338,23 @@ return{
 	},
 
 
-    parsel_history: function(req, res){
+    bpack_history: function(req, res){
 
-		console.log("get parsel history: ");
+		console.log("get bpack history: ");
 
-		var parselId = req.params.parselId
+		var bpackId = req.params.bpackId
 
 		var historytParams = {
-			Key:  parselId
+			Key:  bpackId
 		};
 
-		var model = GetRecordMapModel(historytParams, 'parsels', 'parselHistory', 'parsel-channel');
+		var model = GetRecordMapModel(historytParams, 'bpacks', 'bpackHistory', 'bpack-channel');
 
 		ReadFromLedger(model, res);	   
 	},
 
 
-	delivery_parsel: function(req, res){
+	delivery_parsel: function(req, res){ 
 
 		console.log("put a timestamp, changing owner of parsel on delivery: ");
 
@@ -390,19 +376,19 @@ return{
 		WriteToLedger(model, res);
 	},
 
-    delete_parsel: function(req, res){
+    delete_bpack: function(req, res){
 
-		console.log("Delete parsel from state database. ");
+		console.log("Delete bpack from state database. ");
 
-		var parselId = req.params.parselId;
+		var bpackId = req.params.bpackId;
 		
-		var parsel = {
-            ParselId: parselId
+		var deleteParam = {
+            BpackId: bpackId
        	};
 
         // Retrieve Blockchain Parameter Mapping Model
 		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(parsel, 'parsels', 'deleteParsel', 'parsel-channel');
+		var model = GetRecordMapModel(deleteParam, 'bpacks', 'deleteBpack', 'bpack-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		
