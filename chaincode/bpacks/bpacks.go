@@ -145,11 +145,11 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 */
 func (s *SmartContract) addDonation(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	 if len(args) != 5 {
-	 	return shim.Error("Incorrect number of arguments. Expecting 5")
+	 if len(args) != 6 {
+	 	return shim.Error("Incorrect number of arguments. Expecting 6")
 	 }
 
-	 var bpack = Bpack{DonorId: args[0], Btype: args[1], DonationTS: time.Now().Format(time.RFC3339), Amount: args[2], Holder: args[3], Status: "DRAWN", Location: args[4], Desc: args[5]}
+	 var bpack = Bpack{Btype: args[1],  DonorId: args[0], DonationTS: time.Now().Format(time.RFC3339), Amount: args[2], Location: args[4], Holder: args[3], Status: "DRAWN",  Desc: args[5]}
 
 	 bpackAsBytes, _ := json.Marshal(bpack)
 	 err := APIstub.PutState(randomId(), bpackAsBytes)
