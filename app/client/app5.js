@@ -16,16 +16,20 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#donor_activity").hide();
 	
 
+
 	//$("#new_donor_button_panel").show();
 	//$("#add_donor_panel").hide();
 	//$("#success_add_donor").hide();
 	//$("#success_update_donor").hide();
 
-	
+	// Donor history
 	$("#error_donor_history").hide();
+	$("#donor_history").hide();
+
+	
 	//$("#header_history").show();
 	//$("#donor_history_header").hide();
-	//$("#donor_history").hide();
+
 
 
     $scope.getDonorById = function () {

@@ -103,7 +103,7 @@
   </div>
   
   
-  <div class="alert alert-info" role="alert" id="error_no_data_found">
+  <div class="alert alert-info" role="alert" id="error_no data_found">
     No data found
   </div>
 
@@ -211,7 +211,7 @@
             {{change_status_result}}
           </div>
 
-          <div class="alert alert-danger" role="alert" id="error_accept_parsel_done">
+          <div class="alert alert-danger" role="alert" id="error_change_status">
             {{change_status_result}}
           </div>
 
@@ -230,28 +230,11 @@
           </select>
           </div>
           New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="statusParams.holder">
-          Location<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="statusParams.location">
+          Location<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 20.000, 43.000" ng-model="statusParams.location">
           <input id="prepareForDeliveryId" type="submit" value="Change status" class="btn btn-warning" ng-click="changeBpackStatus(statusParams)">
           <input id="prepareForDeliveryId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeStatus()">
       </div>
 
-      
-      <!-- <div class="form-group" id="change_holder_panel">
-          <label>Change Bpack Holder</label><br>
-
-          <div class="alert alert-danger" role="alert" id="error_change_holder">
-            Error: Please enter a valid parsel Id
-          </div>
-
-          <div class="alert alert-success" role="alert" id="success_change_holder">
-              Success! Tx ID: {{switch_courier_result}}
-          </div>
-         
-           Bpack Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="holderParams.bpackId">
-           New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="holderParams.holder">
-          <input id="changeHolderId" type="submit" value="Change holder" class="btn btn-warning" ng-click="changeBpackHolder(holderParams)">
-          <input id="cancelId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeHolder()">
-      </div> -->
                  
 
       <div class="dropdown dropup">
