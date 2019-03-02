@@ -75,25 +75,141 @@
 
     <div id="body">
 
-      <div class="form-group">
-            <label>Create the Parsel Order</label><br>
-            
-            <div class="alert alert-danger" role="alert" id="error_serder_receiver_id">
-                Error of Sender and(or) Receiver Id
-            </div>
-           
-            <div class="alert alert-success" role="alert" id="success_create_order">
-              Success! Tx ID: {{create_order_result}}
-            </div>
-
-             Sender Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB17" ng-model="order.senderId">
-             Receiver Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 8FE0789" ng-model="order.receiverId">
-            <input id="prepareForDeliveryId" type="submit" value="Create order" class="btn btn-warning" ng-click="createParselOrder()">
-      </div>
 
 
-      <div class="form-group">
-          <label>Accept the Parsel</label><br>
+ <!--  Get filtered by btype/status items from bpack channel-->
+ <div class="form-group">
+    <label>Query available bpacks</label>
+    <div class="form-group"> 
+      <label for="btype">Select blood type:</label>
+      <select class="form-control input-field" id="btype" ng-model="queryParams.btype">
+        <option>Apos</option>
+        <option>Bpos</option>
+        <option>ABpos</option>
+        <option>Opos</option>
+        <option>Aneg</option>
+        <option>Bneg</option>
+        <option>ABneg</option>
+        <option>Oneg</option>
+      </select>
+      <label for="statusId">Select status:</label>
+      <select class="form-control input-field" id="statusId" ng-model="queryParams.status">
+        <option>ALL</option>
+        <option>DRAWN</option>
+        <option>TESTED</option>
+        <option>TFANSFUSED</option>
+        <option>DELETED</option>
+      </select>
+    </div>
+    <p><input id="queryBpackByBtype" type="submit" value="Query" class="btn btn-success" ng-click="queryBpackByBtype()"></p>
+  </div>
+  
+  
+  <div class="alert alert-info" role="alert" id="error_no_data_found">
+    No data found
+  </div>
+
+  <div class="alert alert-danger" role="alert" id="error_id_delete_bpack">
+    Error Id for delete request
+  </div>
+
+  <div class="alert alert-success" role="alert" id="success_delete">
+    Bpack deleted successfully 
+  </div>
+
+  <table id="selected_bpacks" class="table" align="center">
+    <tr>
+      <th>ID</th>
+      <th>Blood type</th>
+      <th>Status</th>
+      <th>Amount</th>
+      <th>Donor ID</th>
+      <th>Donation TS</th>
+      <th>Location</th>
+      <th>Holder</th>
+      <th>Desc</th>
+        <th></th>
+    <tr ng-repeat="bpack in selected_bpacks">
+      <td>{{bpack.Key}}</td>
+      <td>{{bpack.btype}}</td>
+      <td>{{bpack.status}}</td>
+      <td>{{bpack.amount}}</td>
+      <td>{{bpack.donorId}}</td>
+      <td>{{bpack.donationTS}}</td>
+      <td>{{bpack.location}}</td>
+      <td>{{bpack.holder}}</td>
+      <td>{{bpack.desc}}</td>
+      <td>  
+        <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Action
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+          <a class="dropdown-item" href="" ng-click="beforeChangeBpackStatus(bpack)"> Change status</a> <br/>
+          <a class="dropdown-item" href="" ng-click="beforeChangeBpackHolder(bpack)"> Change holder</a> <br/>
+                   
+          <a class="dropdown-item" href="" ></a> <br/>
+          <a class="dropdown-item" href="" ng-click="getBpackHistory(bpack)"> Show history</a> <br/>
+          <a class="dropdown-item" href="" ng-click="deleteBpack(bpack)"> Delete</a> <br/>
+        </div>
+      </div></td>
+    </tr>
+  </table>
+
+
+  <div class="form-group" id="history_header" >
+    <label>History of Bpack</label>
+    <!-- Enter a parsel ID: <input id="parselID" class="form-control input-field" type="text" placeholder=" Ex: 2" ng-model="historyId">
+    <input id="historyParsel" type="submit" value="History" class="btn btn-primary" ng-click="historyParsel()"> -->
+  </div>
+
+  <div class="alert alert-danger" role="alert" id="error_bpack_history">
+    Error: Cannot load history for this Bpack ID
+  </div>
+
+  <table id="bpack_history_header" class="table" align="center">
+     <tr>
+      <th>Donor ID</th>
+      <th>Donation TS</th>
+      <th>Amount</th>
+     </tr>
+     <tr>
+      <td>{{selected_bpack.donorId}}</td>
+      <td>{{selected_bpack.donationTS}}</td>
+      <td>{{selected_bpack.amount}}</td>
+     </tr>
+  </table>
+
+  <table id="bpack_history" class="table" align="center">
+    <tr>
+      <th>Tx Timestamp</th>
+      <th>Tx Id</th>
+      <th>Holder</th>
+      <th>Holder Timestamp</th>
+      <th>Location</th>
+      <th>Status</th>
+      <th>Desctiption</th>
+      <th>Deleted</th>
+    </tr>
+    <tr ng-repeat="rec in bpack_history">
+      <td>{{rec.TxTS}}</td>
+      <td>{{rec.TxId}}</td>
+      <td>{{rec.holder}}</td>
+      <td>{{rec.holderTS}}</td>
+      <td>{{rec.location}}</td>
+      <td>{{rec.status}}</td>
+      <td>{{rec.desc}}</td>
+      <td>{{rec.IsDelete}}</td>  
+    </tr>
+  </table>
+
+  <div class="form-group" id="bpack_history_footer" >
+     <input id="hideHistory" type="submit" value="Hide history" class="btn btn-primary" ng-click="hideBpackHistory()"> 
+  </div>
+
+   <div class="form-group">
+          <label>Change Bpack Status</label><br>
 
           <div class="alert alert-danger" role="alert" id="error_accept_parsel_id">
             {{accepted_parsel_result}}
@@ -107,49 +223,40 @@
             Success! Tx ID: {{accepted_parsel_result}}
           </div>
     
-           Parsel ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="accept.parselId">
-           Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 003" ng-model="accept.branchId">
-          <input id="prepareForDeliveryId" type="submit" value="Accept parsel" class="btn btn-warning" ng-click="acceptParsel()">
+           Bpack ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="accept.parselId">
+           <div>
+            <label for="statusId">Select status:</label>
+              <select class="form-control input-field" id="statusId" ng-model="queryParams.status">
+                <option>ALL</option>
+                <option>DRAWN</option>
+                <option>TESTED</option>
+                <option>TFANSFUSED</option>
+                <option>EXPIRED</option>
+                <option>DELETED</option>
+          </select>
+          </div>
+          <input id="prepareForDeliveryId" type="submit" value="Change status" class="btn btn-warning" ng-click="changeBpackStatus(bpack)">
+          <input id="prepareForDeliveryId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeBpackStatus(bpack)">
       </div>
 
       
       <div class="form-group">
-          <label>Switch Parsel to next Courier</label><br>
+          <label>Change Bpack Holder</label><br>
 
-          <div class="alert alert-danger" role="alert" id="error_switch_courier">
+          <div class="alert alert-danger" role="alert" id="error_change_holder">
             Error: Please enter a valid parsel Id
           </div>
 
-          <div class="alert alert-success" role="alert" id="success_switch_courier">
+          <div class="alert alert-success" role="alert" id="success_change_holder">
               Success! Tx ID: {{switch_courier_result}}
           </div>
          
-           Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
-           Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
-          <input id="prepareForDeliveryId" type="submit" value="Switch courier" class="btn btn-warning" ng-click="switchCourier()">
+           Bpack Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
+           New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
+          <input id="prepareForDeliveryId" type="submit" value="Change holder" class="btn btn-warning" ng-click="changeBpackHolder(bpack)">
+          <input id="cancelId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeBpackHolder(bpack)">
       </div>
-
-      <div class="form-group">
-          <label>Delivery Parsel to Receiver</label><br>
-          
-          <div class="alert alert-success" role="alert" id="success_delivery">
-            Success! Tx ID: {{delivery_parsel}}
-          </div>
-
-          <div class="alert alert-danger" role="alert" id="error_parsel_id">
-              Error: Please enter a valid Parsel Id
-            </div>
-          
-          <div class="alert alert-warning" role="alert" id="error_delivered">
-              Error: This Parsel already delivered
-          </div>
-
-
-           Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="delivery.parselId">
-           Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 997" ng-model="delivery.branchId">
-          <input id="deliveryParselId" type="submit" value="Delivery parsel" class="btn btn-warning" ng-click="deliveryParsel()">
-      </div>
-            
+                 
 
       <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

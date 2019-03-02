@@ -7,41 +7,125 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Create parsel order
-	$("#error_serder_receiver_id").hide();
-	$("#success_create_order").hide();
 
-	// Accept parsel
-	$("#error_accept_parsel_id").hide();
-	$("#error_accept_parsel_done").hide();
-	$("#success_accepted").hide();
+	// Blood bank page
+	$("#selected_bpacks").hide();
 
+	$("#error_no_data_found").hide();
+	$("#error_query_btype").hide();
 
-    // Switch courier
-	$("#error_switch_courier").hide();
-	$("#success_switch_courier").hide();
-
-
-    // Delivery parsel
-	$("#error_parsel_id").hide();
-	$("#error_delivered").hide();
-	$("#success_delivery").hide();
+	// History
+	$("#history_header").hide();
+	$("#bpack_history_header").hide();
+	$("#error_bpack_history").hide();
+	$("#bpack_history").hide();
+	$("#bpack_history_footer").hide();
 
 
-	$scope.createParselOrder = function () {
 
-		appFactory.createParselOrder($scope.order, function (data) {
+
+
+    // Delete blood pack
+	$("#error_id_delete_bpack").hide();
+	$("#success_delete").hide();	
+
+
+	// // Create parsel order
+	// $("#error_serder_receiver_id").hide();
+	// $("#success_create_order").hide();
+
+	// // Accept parsel
+	// $("#error_accept_parsel_id").hide();
+	// $("#error_accept_parsel_done").hide();
+	// $("#success_accepted").hide();
+
+
+    // // Switch courier
+	// $("#error_switch_courier").hide();
+	// $("#success_switch_courier").hide();
+
+
+    // // Delivery parsel
+	// $("#error_parsel_id").hide();
+	// $("#error_delivered").hide();
+	// $("#success_delivery").hide();
+
+
+	$scope.queryBpackByBtype = function(){
+
+		appFactory.queryBpackByBtype($scope.queryParams, function(data){
+
 			
-			if (data == "Cannot find sender/receiver") {
-				$("#error_serder_receiver_id").show();
-				$("#success_create_order").hide();
-			} else {
-				$("#error_serder_receiver_id").hide();
-				$("#success_create_order").show();
+			if (data == "Error: No data found"){
+				console.log()
+				$("#error_no data_found").show();
+				$("#selected_bpacks").hide();
+				
+			} else{
+				$("#selected_bpacks").show();
+				$("#error_query_all").hide();
+			
+			var array = [];
+			for (var i = 0; i < data.length; i++){
+				data[i].Record.Key = data[i].Key;
+				array.push(data[i].Record);
 			}
+			array.sort(function(a, b) {
+			    return a.donationTS.localeCompare(b.donationTS);
+			});
+			$scope.selected_bpacks = array;
+		  }
+	});
 
-			$scope.create_order_result = data;
+	}
+
+
+    $scope.getBpackHistory = function(bpack){
+		
+		var bpackId = bpack.Key;
+
+		appFactory.bpackHistory(bpackId, function(data){
+			
+			if (data  == "No history for bpack"){
+				console.log()
+				$("#error_bpack_history").show();
+				$("#bpack_history").hide();
+			} else{
+				$("#error_bpack_history").hide();
+				$("#history_header").show();
+				$("#bpack_history").show();
+			
+			var array = [];
+			for (var i = 0; i < data.length; i++){
+				
+				data[i].Record.TxId = data[i].TxId;
+				data[i].Record.TxTS = data[i].TxTS;
+				data[i].Record.IsDelete = data[i].IsDelete;
+			
+				array.push(data[i].Record);
+			}
+			array.sort(function(a, b) {
+			    return a.TxTS.localeCompare(b.TxTS);
+			});
+			$scope.bpack_history = array;
+			$scope.selected_bpack = bpack;
+	      }
 		});
+		
+		$("#bpack_history_header").show();
+		$("#bpack_history").show();
+		$("#history_parsel_id").show();
+		$("#bpack_history_footer").show();
+	}
+
+
+	$scope.hideBpackHistory = function () {
+
+		$("#history_header").hide();
+		$("#bpack_history_header").hide();
+		$("#bpack_history").hide();
+		$("#history_parsel_id").hide();
+		$("#bpack_history_footer").hide();
 	}
 
 
@@ -120,42 +204,49 @@ app.factory('appFactory', function ($http) {
 
 	var factory = {};
 	
-		
-	factory.createParselOrder = function (data, callback) {
+	factory.queryBpackByBtype = function (queryParams, callback) {
 
-		var order = data.senderId + "-" + data.receiverId + "-" + "-" + "-";
 
-		$http.get('/create_parsel_order/' + order).success(function (output) {
+		var params = queryParams.btype + "-" + queryParams.status;
+
+		$http.get('/query_bpack_by_btype/'+params).success(function (output) {
 			callback(output)
 		});
 	}
 
-    factory.acceptParsel = function (input, callback) {
-
-		var params = input.parselId + "-" + input.branchId;
-
-		$http.get('/accept_parsel/' + params).success(function (output) {
+	factory.bpackHistory = function(bpackId, callback){
+    	$http.get('/bpack_history/'+bpackId).success(function(output){
 			callback(output)
 		});
 	}
 
-	factory.switchCourier = function (input, callback) {
 
-		var params = input.parselId + "-" + input.courierId;
+    // factory.acceptParsel = function (input, callback) {
 
-		$http.get('/switch_courier/' + params).success(function (output) {
-			callback(output)
-		});
-	}
+	// 	var params = input.parselId + "-" + input.branchId;
+
+	// 	$http.get('/accept_parsel/' + params).success(function (output) {
+	// 		callback(output)
+	// 	});
+	// }
+
+	// factory.switchCourier = function (input, callback) {
+
+	// 	var params = input.parselId + "-" + input.courierId;
+
+	// 	$http.get('/switch_courier/' + params).success(function (output) {
+	// 		callback(output)
+	// 	});
+	// }
 	
-	factory.deliveryParsel = function (delivery, callback) {
+	// factory.deliveryParsel = function (delivery, callback) {
 
-		var params = delivery.parselId;
+	// 	var params = delivery.parselId;
 
-		$http.get('/delivery_parsel/' + params).success(function (output) {
-			callback(output)
-		});
-	}
+	// 	$http.get('/delivery_parsel/' + params).success(function (output) {
+	// 		callback(output)
+	// 	});
+	// }
 
 	return factory;
 });
