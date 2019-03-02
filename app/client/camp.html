@@ -90,7 +90,11 @@
    No data found for this donorId
 </div>
 
-<table id="donor_recored" class="table table-hover" align="center">
+<div class="alert alert-success" role="alert" id="success_add_donation">
+  Success! Tx ID: {{accepted_client_id}}
+</div>
+
+<table id="donor_record" class="table table-hover" align="center">
   <tr>
     <th>ID</th>
     <th>Blood type</th>
@@ -110,10 +114,7 @@
     
     <div class="form-group" id="new_donation_button_panel" >
       <input id="openClientId" type="submit" value="New donation" class="btn btn-warning" ng-click="beforeAddDonation()">
-      <div class="alert alert-success" role="alert" id="success_add_donation">
-        Success! Tx ID: {{accepted_client_id}}
-      </div>
-     
+         
     </div>
 
     <div class="form-group" id="add_donation_panel" >

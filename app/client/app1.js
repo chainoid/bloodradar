@@ -10,9 +10,8 @@ app.controller('appController', function ($scope, appFactory) {
 	// Hospital page
 	$("#selected_bpacks").hide();
 
-	$("#error_no_data_found").hide();
+	$("#hospital_no_data_found").hide();
 	$("#error_query_btype").hide();
-
 
 	$("#history_header").hide();
 	$("#bpack_history_header").hide();
@@ -24,7 +23,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 
 
-//	$("#all_users").hide();
+
 
 //	$("#error_add_group").hide();
 //	$("#success_add_group").hide();
@@ -56,12 +55,17 @@ app.controller('appController', function ($scope, appFactory) {
 			
 			if (data == "Error: No data found"){
 				console.log()
-				$("#error_no data_found").show();
+				$("#hospital_no_data_found").show();
 				$("#selected_bpacks").hide();
+				$("#history_header").hide();
+				$("#bpack_history_header").hide();
+		        $("#bpack_history").hide();
+		        $("#history_parsel_id").hide();
 				
 			} else{
 				$("#selected_bpacks").show();
-				$("#error_query_all").hide();
+				$("#hospital_no_data_found").hide();
+				$("#history_header").hide();
 			
 			var array = [];
 			for (var i = 0; i < data.length; i++){
@@ -74,17 +78,10 @@ app.controller('appController', function ($scope, appFactory) {
 			$scope.selected_bpacks = array;
 		  }
 		});
-
-		
-		
-		$("#sender_parsels").hide();
-		$("#error_id_delete_parsel").hide();
-	    $("#error_not_delivered").hide();
+	   
 	    $("#success_delete").hide();	
-	    $("#history_header").hide();
-		$("#parsel_history_header").hide();
-		$("#parsel_history").hide();
-
+	    $("#bpack_history_header").show();
+		$("#bpack_history").show();
 		$("#success_transfuse").hide();
 	}
 

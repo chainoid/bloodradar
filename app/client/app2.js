@@ -7,26 +7,19 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Client's page
-	$("#error_query_all").hide();
-	$("#all_clients").hide();
+	// Blood camp page
+
+	$("#donor_record").hide();
 
 
 	$("#error_query_range").hide();
 	$("#ranged_clients").hide();
 	
-
-	$("#new_donation_button_panel").show();
+	$("#new_donation_button_panel").hide();
 	$("#add_donation_panel").hide();
 	$("#success_add_donation").hide();
 
-
-	$("#client_sent_parsels").hide();
-	$("#error_no_sent_data_found").hide();
-
-	$("#client_rec_parsels").hide();
-	$("#error_no_rec_data_found").hide();
-	
+		
 
   $scope.queryDonorData = function () {
 		
@@ -40,10 +33,11 @@ app.controller('appController', function ($scope, appFactory) {
 				console.log()
 				$("#error_donor_record").show();
 				$("#donor_record").hide();
+				$("#new_donation_button_panel").hide();
 			} else{
 				$("#error_user_record").hide();
 				$("#donor_record").show();
-			
+				$("#new_donation_button_panel").show();
 			}
 		});
 	}
@@ -79,7 +73,7 @@ app.controller('appController', function ($scope, appFactory) {
 		appFactory.addDonation($scope.donation, function(data){
 			$scope.accepted_client_id = data;
 			$("#new_client_button_panel").show();
-			$("#success_update_client").show();
+			$("#success_add_donation").show();
 			$("#add_client_panel").hide();
 		});
 	}
