@@ -22,20 +22,25 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#bpack_history_footer").hide();
 
 
+	// Change status
+	$("#change_status_panel").hide();	
 
 
+	// Change holder
+	$("#change_holder_panel").hide();
+	$("#error_bpack_id").hide();
 
     // Delete blood pack
 	$("#error_id_delete_bpack").hide();
 	$("#success_delete").hide();	
-
+	$("#success_change_status").hide();
 
 	// // Create parsel order
 	// $("#error_serder_receiver_id").hide();
 	// $("#success_create_order").hide();
 
 	// // Accept parsel
-	// $("#error_accept_parsel_id").hide();
+	
 	// $("#error_accept_parsel_done").hide();
 	// $("#success_accepted").hide();
 
@@ -129,72 +134,84 @@ app.controller('appController', function ($scope, appFactory) {
 	}
 
 
-	$scope.acceptParsel = function () {
+	$scope.beforeChangeBpackStatus = function (bpack) {
 
-		appFactory.acceptParsel($scope.accept, function (data) {
+		var params ={};
 
-			$scope.accepted_parsel_result = data;
+		params.bpackId = bpack.Key;
+		params.status  = bpack.status;
+		params.holder  = bpack.holder;
+		params.location  = bpack.location;
+
+		$scope.statusParams = params;
+
+		$("#change_status_panel").show();
+	}
+
+	$scope.changeBpackStatus = function (statusParams) {
+
+		appFactory.changeBpackStatus($scope.statusParams, function (data) {
+
+			$scope.change_status_result = data;
 			
-			$("#error_accept_parsel_id").hide();
+			$("#error_bpack_id").hide();
 			$("#error_accept_parsel_done").hide();
-			$("#success_accepted").show();
+			$("#success_change_status").show();
 
-			if ($scope.accepted_parsel_result == "Error: Parsel not found") {
-				$("#error_accept_parsel_id").show();
+			if ($scope.change_status_result == "Error: Parsel not found") {
+				$("#error_bpack_id").show();
 				$("#error_accept_parsel_done").hide();
-				$("#success_accepted").hide();
+				$("#success_change_status").hide();
 			
 
-			} else if ($scope.accepted_parsel_result == "Error: Already accepted") {
-				$("#error_accept_parsel_id").hide();
+			} else if ($scope.change_status_result == "Error: Already accepted") {
+				$("#error_bpack_id").hide();
 				$("#error_accept_parsel_done").show();
-				$("#success_accepted").hide();
+				$("#success_change_status").hide();
 		    }					
 		});
 	}
 
-	$scope.switchCourier = function () {
+	$scope.cancelChangeStatus = function () {
 
-		appFactory.switchCourier($scope.switch, function (data) {
-
-			if (data == "Could not locate parsel") {
-				$("#error_switch_courier").show();
-				$("#success_switch_courier").hide();
-			} else {
-				$("#error_switch_courier").hide();
-				$("#success_switch_courier").show();
-			}
-
-			$scope.switch_courier_result = data;
-		});
+		$("#change_status_panel").hide();
+		$("#error_bpack_id").hide();
+		$("#success_change_status").hide();
 	}
 
+
+	// $scope.beforeChangeBpackHolder = function (bpack) {
+
+	// 	var params ={};
+	// 	params.bpackId = bpack.Key;
+	// 	params.status  = bpack.status;
+
+	// 	$scope.holderParams = params;
+
+	// 	$("#change_holder_panel").show();
+	// }
+
+
+	// $scope.changeBpackHolder = function (holderParams) {
+
+	// 	appFactory.changeBpackHolder($scope.switch, function (data) {
+
+	// 		if (data == "Could not locate parsel") {
+	// 			$("#error_switch_courier").show();
+	// 			$("#success_switch_courier").hide();
+	// 		} else {
+	// 			$("#error_switch_courier").hide();
+	// 			$("#success_switch_courier").show();
+	// 		}
+
+	// 		$scope.switch_courier_result = data;
+	// 	});
+	// }
 	
-	$scope.deliveryParsel = function () {
-	
+	// $scope.cancelChangeHolder = function () {
 
-		appFactory.deliveryParsel($scope.delivery, function (data) {
-
-			$scope.delivery_parsel = data;
-			
-			$("#error_parsel_id").hide();
-			$("#error_delivered").hide();
-			$("#success_delivery").show();
-
-			if ($scope.delivery_parsel == "Error: Parsel not found") {
-				$("#error_parsel_id").show();
-				$("#error_delivered").hide();
-				$("#success_delivery").hide();
-			
-
-			} else if ($scope.delivery_parsel == "Error: Already delivered") {
-				$("#error_parsel_id").hide();
-				$("#error_delivered").show();
-				$("#success_delivery").hide();
-		    	
-        	} 
-		});
-	}
+	// 	$("#change_holder_panel").hide();
+	// }
 
 });
 
@@ -221,29 +238,20 @@ app.factory('appFactory', function ($http) {
 	}
 
 
-    // factory.acceptParsel = function (input, callback) {
+    factory.changeBpackStatus = function (statusParams, callback) {
 
-	// 	var params = input.parselId + "-" + input.branchId;
+		var params = statusParams.bpackId + "-" + statusParams.status + "-" + statusParams.holder + "-" + statusParams.location;
 
-	// 	$http.get('/accept_parsel/' + params).success(function (output) {
-	// 		callback(output)
-	// 	});
-	// }
+		$http.get('/change_bpack_status/' + params).success(function (output) {
+			callback(output)
+		});
+	}
 
-	// factory.switchCourier = function (input, callback) {
+	// factory.changeBpackHolder = function (input, callback) {
 
-	// 	var params = input.parselId + "-" + input.courierId;
+	// 	var params = input.bpacklId + "-" + input.holder;
 
-	// 	$http.get('/switch_courier/' + params).success(function (output) {
-	// 		callback(output)
-	// 	});
-	// }
-	
-	// factory.deliveryParsel = function (delivery, callback) {
-
-	// 	var params = delivery.parselId;
-
-	// 	$http.get('/delivery_parsel/' + params).success(function (output) {
+	// 	$http.get('/change_bpack_holder/' + params).success(function (output) {
 	// 		callback(output)
 	// 	});
 	// }

@@ -135,23 +135,27 @@ return{
 	},
 
 
-	accept_parsel: function(req, res) {
+	change_bpack_status: function(req, res) {
 
 		console.log(" put an sender branch and TS: ");
 
-		var array = req.params.accept.split("-");
-		var parselId  = array[0]
-		var branchId = array[1]
+		var array = req.params.params.split("-");
+		var bpackId  = array[0]
+		var status = array[1]
+		var holder = array[2]
+		var location = array[3]
 
 		console.log(array);
 
-		var acceptParsel = {
-            ParselId:    parselId,
-            BranchId:    branchId
+		var statusParams = {
+            BpackId:     bpackId,
+			Status:      status,
+			Holder:      holder,
+			Location:    location
 		};
 
 		// Retrieve Blockchain Parameter Mapping Model
-    	var model = GetRecordMapModel(acceptParsel, 'parsels', 'acceptParsel', 'parsel-channel');
+    	var model = GetRecordMapModel(statusParams, 'bpacks', 'changeBpackStatus', 'bpack-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		
@@ -159,27 +163,27 @@ return{
        },
 
 
-	switch_courier: function(req, res) {
-		console.log("put a new courier name and timestamp: ");
+	// change_bpack_holder: function(req, res) {
+	// 	console.log("put a new holder name and timestamp: ");
 
-		var array = req.params.switch.split("-");
-		var parselId  = array[0]
-		var courierId = array[1]
+	// 	var array = req.params.holder.split("-");
+	// 	var bpackId  = array[0]
+	// 	var status   = array[1]
 
-		console.log(array);
+	// 	console.log(array);
 
-		var switchOrder = {
-            ParselId:    parselId,
-            CourierId:   courierId
-		};
+	// 	var holderParams = {
+    //         BpackId:    parselId,
+    //         Holder:     holder
+	// 	};
 
-		// Retrieve Blockchain Parameter Mapping Model
-    	var model = GetRecordMapModel(switchOrder, 'parsels', 'switchCourier', 'parsel-channel');
+	// 	// Retrieve Blockchain Parameter Mapping Model
+    // 	var model = GetRecordMapModel(holderParams, 'bpacks', 'changeBpackHolder', 'bpack-channel');
 		
-		console.log(" The model before write to the ledger: ",  model);
+	// 	console.log(" The model before write to the ledger: ",  model);
 		
-		WriteToLedger(model, res);
-       },
+	// 	WriteToLedger(model, res);
+    //    },
 
 
 	add_donor: function(req, res){

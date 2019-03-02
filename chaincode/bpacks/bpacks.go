@@ -105,10 +105,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.doTransfuse(APIstub, args)
 	} else if function == "bpackHistory" {
 		return s.bpackHistory(APIstub, args)
-	} else if function == "switchCourier" {
-		return s.switchCourier(APIstub, args)
-	} else if function == "acceptParsel" {
-		return s.acceptParsel(APIstub, args)
+	} else if function == "changeBpackStatus" {
+		return s.changeBpackStatus(APIstub, args)
 	} else if function == "deleteBpack" {
 		return s.deleteBpack(APIstub, args)
 	}
@@ -124,6 +122,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	bpacks := []Bpack{
 		Bpack{Btype: "Apos", DonorId: "1234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "50.000, 30.000", Amount: "200", Holder: "BankOne", Status: "TESTED", Desc: "Campus One compain"},
 		Bpack{Btype: "Apos", DonorId: "2234567890", DonationTS: time.Now().Format(time.RFC3339), Location: "51.000, 31.000", Amount: "350", Holder: "BankOne", Status: "DRAWN",  Desc: "Campus One compain"},
+		Bpack{Btype: "Apos", DonorId: "5634567890", DonationTS: time.Now().Format(time.RFC3339), Location: "51.000, 32.000", Amount: "340", Holder: "BankOne", Status: "DRAWN",  Desc: "Campus One compain"},
 		
 	}
 
@@ -223,52 +222,54 @@ func (s *SmartContract) queryBpackByBtype(APIstub shim.ChaincodeStubInterface, a
 }
 
 
-
 /*
-  * The switchCourier method *
+  * The changeBpackStatus method *
  The data in the world state can be updated with who has possession.
  This function takes in 2 arguments, courier id and timestamp of action.
 */
-func (s *SmartContract) acceptParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) changeBpackStatus(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
 
-	parselAsBytes, _ := APIstub.GetState(args[0])
-	if parselAsBytes == nil {
+	bpackAsBytes, _ := APIstub.GetState(args[0])
 
-        fmt.Printf("- acceptParsel with id: %s Parsel not found \n", args[0])
+	if bpackAsBytes == nil {
 
-		return shim.Error("Parsel not found")
+        fmt.Printf("- changeBpackStatus with id: %s Bpack not found \n", args[0])
+
+		return shim.Error("Bpack not found")
 	}
-	parsel := Parsel{}
+	bpack := Bpack{}
 
-	json.Unmarshal(parselAsBytes, &parsel)
+	json.Unmarshal(bpackAsBytes, &bpack)
 
 
     // Chack that parsel not accepted before 
-	if parsel.SenderBranch != "" {
+	if bpack.Status == "DELETED" {
 
-		fmt.Printf("- acceptParsel with id: %s Already accepted \n", args[0])
+		fmt.Printf("- changeBpackStatus with id: %s Already accepted \n", args[0])
 
-		return shim.Error("Already accepted")
+		return shim.Error("Deleted bpack")
 	}
 
 
 	// Normally check that the specified argument is a valid holder of parsel
 	// we are skipping this check for this example
-	parsel.SenderBranch = args[1]
+	bpack.Status = args[1]
+	bpack.HolderTS = time.Now().Format(time.RFC3339)
+	bpack.Holder = args[2]
+	bpack.Location = args[3]
 
-	parsel.SenderTS = time.Now().Format(time.RFC3339)
 
-	parselAsBytes, _ = json.Marshal(parsel)
-	err := APIstub.PutState(args[0], parselAsBytes)
+	bpackAsBytes, _ = json.Marshal(bpack)
+	err := APIstub.PutState(args[0], bpackAsBytes)
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change courier for parsel: %s", args[0]))
+		return shim.Error(fmt.Sprintf("Failed to change status of bpack: %s", args[0]))
 	}
 
-	fmt.Printf("- acceptParsel:\n%s\n", parselAsBytes)
+	fmt.Printf("- changeBpackStatus:\n%s\n", bpackAsBytes)
 
 	return shim.Success(nil)
 }
@@ -279,39 +280,39 @@ func (s *SmartContract) acceptParsel(APIstub shim.ChaincodeStubInterface, args [
  The data in the world state can be updated with who has possession.
  This function takes in 2 arguments, courier id and timestamp of action.
 */
-func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+// func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
+// 	if len(args) != 2 {
+// 		return shim.Error("Incorrect number of arguments. Expecting 2")
+// 	}
 
-	parselAsBytes, _ := APIstub.GetState(args[0])
-	if parselAsBytes == nil {
+// 	parselAsBytes, _ := APIstub.GetState(args[0])
+// 	if parselAsBytes == nil {
 
-        fmt.Printf("- switchCourier with id: %s Parsel not found \n", args[0])
+//         fmt.Printf("- switchCourier with id: %s Parsel not found \n", args[0])
 
-		return shim.Error("Parsel not found")
-	}
-	parsel := Parsel{}
+// 		return shim.Error("Parsel not found")
+// 	}
+// 	parsel := Parsel{}
 
-	json.Unmarshal(parselAsBytes, &parsel)
+// 	json.Unmarshal(parselAsBytes, &parsel)
 
-	// Normally check that the specified argument is a valid holder of parsel
-	// we are skipping this check for this example
-	parsel.CourierId = args[1]
+// 	// Normally check that the specified argument is a valid holder of parsel
+// 	// we are skipping this check for this example
+// 	parsel.CourierId = args[1]
 
-	parsel.CourierTS = time.Now().Format(time.RFC3339)
+// 	parsel.CourierTS = time.Now().Format(time.RFC3339)
 
-	parselAsBytes, _ = json.Marshal(parsel)
-	err := APIstub.PutState(args[0], parselAsBytes)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change courier for parsel: %s", args[0]))
-	}
+// 	parselAsBytes, _ = json.Marshal(parsel)
+// 	err := APIstub.PutState(args[0], parselAsBytes)
+// 	if err != nil {
+// 		return shim.Error(fmt.Sprintf("Failed to change courier for parsel: %s", args[0]))
+// 	}
 
-	fmt.Printf("- switchCourier:\n%s\n", parselAsBytes)
+// 	fmt.Printf("- switchCourier:\n%s\n", parselAsBytes)
 
-	return shim.Success(nil)
-}
+// 	return shim.Success(nil)
+// }
 
 
 

@@ -30,10 +30,21 @@ module.exports = function(app){
     radar.get_donor_by_id(req, res);
   });
 
+  app.get('/donor_history/:donorKey', function(req, res){
+    radar.donor_history(req, res);
+  });
+
   // Blood Camp Page
   app.get('/add_donation/:donation', function(req, res){
     radar.add_donation(req, res);
   });
+
+  //  Blood bank page
+  app.get('/change_bpack_status/:params', function(req, res){
+    radar.change_bpack_status(req, res);
+  });
+
+ 
 
   // Hospital
   app.get('/query_bpack_by_btype/:queryParams', function(req, res){
@@ -45,33 +56,17 @@ module.exports = function(app){
   
 
 
-  app.get('/get_parsel/:id', function(req, res){
-    radar.get_parsel(req, res);
-  });
   
-  app.get('/get_all_parsels', function(req, res){
-    radar.get_all_parsels(req, res);
-  });
-  app.get('/delivery_parsel/:delivery', function(req, res){
-    radar.delivery_parsel(req, res);
-  });
   
   
   app.get('/get_clients_by_range/:range', function(req, res){
     radar.get_clients_by_range(req, res);
   });
-  app.get('/donor_history/:donorKey', function(req, res){
-    radar.donor_history(req, res);
-  });
+  
  
   app.get('/create_parsel_order/:order', function(req, res){
     radar.create_parsel_order(req, res);
   });
-  app.get('/accept_parsel/:accept', function(req, res){
-    radar.accept_parsel(req, res);
-  });
-  app.get('/switch_courier/:switch', function(req, res){
-    radar.switch_courier(req, res);
-  });
+    
    
 }

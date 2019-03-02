@@ -75,8 +75,6 @@
 
     <div id="body">
 
-
-
  <!--  Get filtered by btype/status items from bpack channel-->
  <div class="form-group">
     <label>Query available bpacks</label>
@@ -147,8 +145,6 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
           <a class="dropdown-item" href="" ng-click="beforeChangeBpackStatus(bpack)"> Change status</a> <br/>
-          <a class="dropdown-item" href="" ng-click="beforeChangeBpackHolder(bpack)"> Change holder</a> <br/>
-                   
           <a class="dropdown-item" href="" ></a> <br/>
           <a class="dropdown-item" href="" ng-click="getBpackHistory(bpack)"> Show history</a> <br/>
           <a class="dropdown-item" href="" ng-click="deleteBpack(bpack)"> Delete</a> <br/>
@@ -208,26 +204,24 @@
      <input id="hideHistory" type="submit" value="Hide history" class="btn btn-primary" ng-click="hideBpackHistory()"> 
   </div>
 
-   <div class="form-group">
+   <div class="form-group" id="change_status_panel">
           <label>Change Bpack Status</label><br>
 
-          <div class="alert alert-danger" role="alert" id="error_accept_parsel_id">
-            {{accepted_parsel_result}}
+          <div class="alert alert-danger" role="alert" id="error_bpack_id">
+            {{change_status_result}}
           </div>
 
           <div class="alert alert-danger" role="alert" id="error_accept_parsel_done">
-            {{accepted_parsel_result}}
+            {{change_status_result}}
           </div>
 
-          <div class="alert alert-success" role="alert" id="success_accepted">
-            Success! Tx ID: {{accepted_parsel_result}}
+          <div class="alert alert-success" role="alert" id="success_change_status">
+            Success! Tx ID: {{change_status_result}}
           </div>
-    
-           Bpack ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="accept.parselId">
+              Bpack ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="statusParams.bpackId">
            <div>
             <label for="statusId">Select status:</label>
-              <select class="form-control input-field" id="statusId" ng-model="queryParams.status">
-                <option>ALL</option>
+              <select class="form-control input-field" id="statusId" ng-model="statusParams.status">
                 <option>DRAWN</option>
                 <option>TESTED</option>
                 <option>TFANSFUSED</option>
@@ -235,12 +229,14 @@
                 <option>DELETED</option>
           </select>
           </div>
-          <input id="prepareForDeliveryId" type="submit" value="Change status" class="btn btn-warning" ng-click="changeBpackStatus(bpack)">
-          <input id="prepareForDeliveryId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeBpackStatus(bpack)">
+          New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="statusParams.holder">
+          Location<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="statusParams.location">
+          <input id="prepareForDeliveryId" type="submit" value="Change status" class="btn btn-warning" ng-click="changeBpackStatus(statusParams)">
+          <input id="prepareForDeliveryId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeStatus()">
       </div>
 
       
-      <div class="form-group">
+      <!-- <div class="form-group" id="change_holder_panel">
           <label>Change Bpack Holder</label><br>
 
           <div class="alert alert-danger" role="alert" id="error_change_holder">
@@ -251,11 +247,11 @@
               Success! Tx ID: {{switch_courier_result}}
           </div>
          
-           Bpack Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
-           New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
-          <input id="prepareForDeliveryId" type="submit" value="Change holder" class="btn btn-warning" ng-click="changeBpackHolder(bpack)">
-          <input id="cancelId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeBpackHolder(bpack)">
-      </div>
+           Bpack Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="holderParams.bpackId">
+           New Holder<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 " ng-model="holderParams.holder">
+          <input id="changeHolderId" type="submit" value="Change holder" class="btn btn-warning" ng-click="changeBpackHolder(holderParams)">
+          <input id="cancelId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelChangeHolder()">
+      </div> -->
                  
 
       <div class="dropdown dropup">
