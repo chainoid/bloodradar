@@ -30,20 +30,6 @@ import (
 type SmartContract struct {
 }
 
-/* Define Parsel structure, with several properties.
-Structure tags are used by encoding/json library
-*/
-type Parsel struct {
-	SenderId       string `json:"senderId"`
-	SenderTS       string `json:"senderTS"`
-	SenderBranch   string `json:"senderBranch"`
-	CourierId      string `json:"courierId"`
-	CourierTS      string `json:"courierTS"` 
-	ReceiverId     string `json:"receiverId"`
-	ReceiverTS     string `json:"receiverTS"`
-	ReceiverBranch string `json:"receiverBranch"`
-}
-
 
 /* Define Bpack structure, with several properties.
 Structure tags are used by encoding/json library
@@ -109,6 +95,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.changeBpackStatus(APIstub, args)
 	} else if function == "deleteBpack" {
 		return s.deleteBpack(APIstub, args)
+	}  else if function == "getDonorActivity" {
+		return s.getDonorActivity(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -163,7 +151,7 @@ func (s *SmartContract) addBpack(APIstub shim.ChaincodeStubInterface, args []str
 }
 
 /*
-  * The queryAllParsels method *
+  * The queryBpackByBtype method *
  allows for assessing all the records added to the ledger(all parsels in the delivery system)
  This method does not take any arguments. Returns JSON string containing results.
 */
@@ -276,47 +264,6 @@ func (s *SmartContract) changeBpackStatus(APIstub shim.ChaincodeStubInterface, a
 
 
 /*
-  * The switchCourier method *
- The data in the world state can be updated with who has possession.
- This function takes in 2 arguments, courier id and timestamp of action.
-*/
-// func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-// 	if len(args) != 2 {
-// 		return shim.Error("Incorrect number of arguments. Expecting 2")
-// 	}
-
-// 	parselAsBytes, _ := APIstub.GetState(args[0])
-// 	if parselAsBytes == nil {
-
-//         fmt.Printf("- switchCourier with id: %s Parsel not found \n", args[0])
-
-// 		return shim.Error("Parsel not found")
-// 	}
-// 	parsel := Parsel{}
-
-// 	json.Unmarshal(parselAsBytes, &parsel)
-
-// 	// Normally check that the specified argument is a valid holder of parsel
-// 	// we are skipping this check for this example
-// 	parsel.CourierId = args[1]
-
-// 	parsel.CourierTS = time.Now().Format(time.RFC3339)
-
-// 	parselAsBytes, _ = json.Marshal(parsel)
-// 	err := APIstub.PutState(args[0], parselAsBytes)
-// 	if err != nil {
-// 		return shim.Error(fmt.Sprintf("Failed to change courier for parsel: %s", args[0]))
-// 	}
-
-// 	fmt.Printf("- switchCourier:\n%s\n", parselAsBytes)
-
-// 	return shim.Success(nil)
-// }
-
-
-
-/*
   * The doTransfuse method *
  The data in the world state can be updated with who has possession.
  This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
@@ -409,6 +356,11 @@ func (s *SmartContract) deleteBpack(APIstub shim.ChaincodeStubInterface, args []
  */
 func (s *SmartContract) bpackHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
 	resultsIterator, err := APIstub.GetHistoryForKey(args[0])
 
 	if err != nil {
@@ -470,6 +422,72 @@ func (s *SmartContract) bpackHistory(APIstub shim.ChaincodeStubInterface, args [
 
 	return shim.Success(buffer.Bytes())
 }
+
+
+/*
+  * The getDonorActivity method *
+ allows for assessing all the records added to the ledger(all parsels in the delivery system)
+ This method does not take any arguments. Returns JSON string containing results.
+*/
+func (s *SmartContract) getDonorActivity(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+
+	startKey := "0"
+	endKey := "9999"
+
+	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+  // Create an object
+    bpack := Bpack{}
+  // Unmarshal record to parsel
+  json.Unmarshal(queryResponse.Value, &bpack)
+
+  // Add only filtered by btype
+  if bpack.DonorId == args[0]  {
+
+		// Add comma before array members,suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(queryResponse.Key)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(queryResponse.Value))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	}
+
+	buffer.WriteString("]")
+
+	fmt.Printf("- getDonorActivity:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+}
+
 
 /*
   * main function *

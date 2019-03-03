@@ -102,6 +102,13 @@
      No data found
   </div>
 
+  <div class="alert alert-success" role="alert" id="success_add_donor">
+    Success! Added Donor Tx ID: {{accepted_donor_id}}
+  </div>
+  <div class="alert alert-success" role="alert" id="success_update_donor">
+    Success! Updated Donor Tx ID: {{accepted_donor_id}}
+  </div>
+
   <table id="donors_by_btype" class="table table-hover" align="center">
     <tr>
       <th>Donor ID</th>
@@ -184,12 +191,7 @@
 
     <div class="form-group" id="new_donor_button_panel" >
       <input id="openClientId" type="submit" value="New donor" class="btn btn-warning" ng-click="beforeAddDonor()">
-      <div class="alert alert-success" role="alert" id="success_add_donor">
-        Success! Tx ID: {{accepted_donor_id}}
-      </div>
-      <div class="alert alert-success" role="alert" id="success_update_donor">
-        Success! Tx ID: {{accepted_donor_id}}
-      </div>
+      
     </div>
 
     <div class="form-group" id="add_donor_panel" >

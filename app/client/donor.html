@@ -83,6 +83,10 @@
             <p><input id="getDonorById" type="submit" value="Profile" class="btn btn-success" ng-click="getDonorById()"></p>
      </div>
      
+     <div class="alert alert-danger" role="alert" id="error_donor_profile">
+      Error: Cannot load profile for this Donor ID
+    </div>
+
      <table id="donor_profile" class="table" align="center">
         <tr>
          <th>Name</th>
@@ -139,33 +143,31 @@
           <p><input id="gitDonorActivity" type="submit" value="Activity" class="btn btn-success" ng-click="getDonorActivity(donorId)"></p>
       </div>
 
+
+      <div class="alert alert-info" role="alert" id="error_donor_record">
+        No activities for this donor
+      </div>
+
       <table id="donor_activity" class="table" align="center">
         <tr>
          <th>Donation Id</th>
+         <th>Donation TS</th>
+         <th>Amount</th>
          <th>Location</th>
          <th>Status</th>
          <th>Desc</th>
-         <!--
-         <th>Sex</th>
-         <th>Age</th>
-         <th>Blood type</th>
-         -->
+        
         </tr>
         <tr ng-repeat="act in donor_activity">
          <td>{{act.Key}}</td>
+         <td>{{act.donationTS}}</td>
+         <td>{{act.amount}}</td>
          <td>{{act.location}}</td>
          <td>{{act.status}}</td>
          <td>{{act.desc}}</td>
-         <!--
-         <td>{{activity.sex}}</td>
-         <td>{{activity.age}}</td>
-         <td>{{activity.btype}}</td>
-         -->
+        
         </tr>
      </table>
-
-        
-
      
       <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

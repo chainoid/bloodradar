@@ -41,6 +41,13 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.queryBpackByBtype($scope.queryParams, function(data){
 
+
+			$("#history_header").hide();
+			$("#bpack_history_header").hide();
+			$("#bpack_history").hide();
+			$("#history_parsel_id").hide();
+			$("#bpack_history_footer").hide();
+
 			
 			if (data == "Error: No data found"){
 				console.log()
@@ -50,6 +57,7 @@ app.controller('appController', function ($scope, appFactory) {
 			} else{
 				$("#bbank_no_data_found").hide();
 				$("#error_query_all").hide();
+				$("#selected_bpacks").show();
 			
 			var array = [];
 			for (var i = 0; i < data.length; i++){

@@ -66,6 +66,9 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#selected_bpacks").show();
 				$("#hospital_no_data_found").hide();
 				$("#history_header").hide();
+				$("#bpack_history_header").hide();
+		        $("#bpack_history").hide();
+		        $("#history_parsel_id").hide();
 			
 			var array = [];
 			for (var i = 0; i < data.length; i++){
@@ -80,9 +83,9 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	   
 	    $("#success_delete").hide();	
-	    $("#bpack_history_header").show();
-		$("#bpack_history").show();
-		$("#success_transfuse").hide();
+	    //$("#bpack_history_header").show();
+		//$("#bpack_history").show();
+		//$("#success_transfuse").hide();
 	}
 
 	$scope.getBpackHistory = function(bpack){

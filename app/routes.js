@@ -34,6 +34,10 @@ module.exports = function(app){
     radar.donor_history(req, res);
   });
 
+  app.get('/get_donor_activity/:donorId', function(req, res){
+    radar.get_donor_activity(req, res);
+  });
+
   // Blood Camp Page
   app.get('/add_donation/:donation', function(req, res){
     radar.add_donation(req, res);
@@ -54,19 +58,11 @@ module.exports = function(app){
     radar.do_transfuse(req, res);
   });
   
-
-
   
   
   
   app.get('/get_clients_by_range/:range', function(req, res){
     radar.get_clients_by_range(req, res);
   });
-  
- 
-  app.get('/create_parsel_order/:order', function(req, res){
-    radar.create_parsel_order(req, res);
-  });
-    
    
 }

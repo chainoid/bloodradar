@@ -8,52 +8,38 @@ var app = angular.module('application', []);
 app.controller('appController', function ($scope, appFactory) {
 
 	// Donor profile
-	$("#error_query_donors_by_type").hide();
+	$("#error_donor_profile").hide();
 	$("#donor_profile").hide();
 
-
-	$("#error_query_range").hide();
-	$("#donor_activity").hide();
-	
-
-
-	//$("#new_donor_button_panel").show();
-	//$("#add_donor_panel").hide();
-	//$("#success_add_donor").hide();
-	//$("#success_update_donor").hide();
-
 	// Donor history
+	$("#header_history").hide();
 	$("#error_donor_history").hide();
 	$("#donor_history").hide();
 
-	
-	//$("#header_history").show();
-	//$("#donor_history_header").hide();
-
-
+	// Donor activity
+	$("#header_activity").hide();
+	$("#error_donor_record").hide();
+	$("#donor_activity").hide();
 
     $scope.getDonorById = function () {
 		
 		var donorId = $scope.donorId;
 
 		appFactory.getDonorById(donorId, function(data){
-
-          	$scope.selected_donor = data;
-
-			if ($scope.selected_donor == "Donor record not found"){
-				console.log()
-				//$("#error_user_record").show();
-				$("#donor_profile").hide();
-				//$("#user_record2").hide();
-				
+          	
+			if (data == "Donor record not found"){
+		  		console.log()
+			  	$("#error_donor_profile").show();
+				  $("#donor_profile").hide();
 			} else{
-				//$("#error_user_record").hide();
+				$("#error_donor_profile").hide();
 				$("#donor_profile").show();
-				//$("#user_record2").show();
+				$("#header_history").show();
+				$("#header_activity").show();
+				$scope.selected_donor = data;
 			}
 		});
 	}
-
 
 	$scope.getDonorHistory = function (donorKey) {
 
@@ -61,8 +47,6 @@ app.controller('appController', function ($scope, appFactory) {
 
 			if (data  == "Error: No data found"){
 				$("#error_no_sent_data_found").hide();
-				
-				
 				$("#error_donor_history").show();
 				$("#donor_history_header").hide();
 				$("#donor_history").hide();
@@ -93,28 +77,39 @@ app.controller('appController', function ($scope, appFactory) {
 	}
 
 
-	$scope.getDonorRecord = function () {
+	$scope.getDonorActivity = function () {
 		
-		var id = $scope.id;
+		var donorId = $scope.donorId;
 
-		appFactory.getDonorRecord(id, function(data){
+		appFactory.getDonorActivity(donorId, function(data){
 
-			$scope.user_record = data;
-
-			if ($scope.user_record == "User record not found"){
+			if (data == "Error: No data found"){
 				console.log()
-				$("#error_user_record").show();
+				$("#error_donor_record").show();
 				$("#donor_activity").hide();
-				$("#user_record2").hide();
+			
 				
 			} else{
-				$("#error_user_record").hide();
+
+			$("#error_donor_record").hide();
 				$("#donor_activity").show();
-				$("#user_record2").show();
+
+			  var array = [];
+
+			  for (var i = 0; i < data.length; i++){
+			  	data[i].Record.Key = data[i].Key;
+				  array.push(data[i].Record);
+				}
+				
+			  array.sort(function(a, b) {
+			    return a.donationTS.localeCompare(b.donationTS);
+			  }
+			);
+			$scope.donor_activity = array;
+			
 			}
 		});
 	}
-
 
 });
 
@@ -140,8 +135,8 @@ app.factory('appFactory', function ($http) {
 		});
     }
 
-	factory.getDonorRecord = function (id, callback) {
-		$http.get('/get_user_record/' + id).success(function (output) {
+	factory.getDonorActivity = function (donorId, callback) {
+		$http.get('/get_donor_activity/' + donorId).success(function (output) {
 			callback(output)
 		});
 	}

@@ -284,6 +284,22 @@ return{
 		WriteToLedger(model, res);
 	},
 
+	get_donor_activity: function(req, res){
+
+		console.log("get donor activity: ");
+
+		var donorId = req.params.donorId
+
+		var activityParams = {
+			Key:  donorId
+		};
+
+		var model = GetRecordMapModel(activityParams, 'bpacks', 'getDonorActivity', 'bpack-channel');
+
+		ReadFromLedger(model, res);	   
+	},
+
+
 	donor_history: function(req, res){
 
 		console.log("get donor history: ");
