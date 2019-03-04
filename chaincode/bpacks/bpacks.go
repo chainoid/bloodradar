@@ -242,14 +242,12 @@ func (s *SmartContract) changeBpackStatus(APIstub shim.ChaincodeStubInterface, a
 		return shim.Error("Deleted bpack")
 	}
 
-
-	// Normally check that the specified argument is a valid holder of parsel
+	// Normally check that the specified argument is a valid holder of bpack
 	// we are skipping this check for this example
 	bpack.Status = args[1]
 	bpack.HolderTS = time.Now().Format(time.RFC3339)
 	bpack.Holder = args[2]
 	bpack.Location = args[3]
-
 
 	bpackAsBytes, _ = json.Marshal(bpack)
 	err := APIstub.PutState(args[0], bpackAsBytes)
@@ -310,7 +308,7 @@ func (s *SmartContract) doTransfuse(APIstub shim.ChaincodeStubInterface, args []
 
 
 /*
- * The deleteParsel method *
+ * The deleteBpack method *
    The data in the world state can be updated with who has possession.
    This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
 */
@@ -321,7 +319,7 @@ func (s *SmartContract) deleteBpack(APIstub shim.ChaincodeStubInterface, args []
 	}
 
 	bpackAsBytes, _ := APIstub.GetState(args[0])
-	if bpackAsBytes == nil {
+	  if bpackAsBytes == nil {
 
         fmt.Printf("- deleteBpack with id: %s Bpack not found \n", args[0])
 

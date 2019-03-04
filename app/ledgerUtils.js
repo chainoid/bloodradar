@@ -146,7 +146,8 @@ var os            = require('os');
                 res.send("Error: No data found");
             }
         }).catch((err) => {
-            console.error('Failed to query successfully :: ' + err);
+            console.error('Failed to query successfully : ' + err);
+            res.send("Error: No data found");
         });
     }
     
