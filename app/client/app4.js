@@ -28,8 +28,6 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#donor_history").hide();
 
 
-	$("#barcode_place").hide();
-
 	$scope.queryDonorsByBtype = function () {
 
 		appFactory.queryDonorsByBtype($scope.btype, function (data) {
@@ -59,9 +57,6 @@ app.controller('appController', function ($scope, appFactory) {
 			}
 			array.sort(function(a, b) {
 					return a.name.localeCompare(b.name);
-					
-
-
 			});
 			$scope.donors_by_btype = array;
 
@@ -73,15 +68,8 @@ app.controller('appController', function ($scope, appFactory) {
 	$scope.generateIdBarcode = function (donor) {
 
 		var donorKey = donor.Key;
-
+		 
 		JsBarcode("#barcode", donorKey);
-		$("#barcode_place").show();
-	}
-	
-
-	$scope.hideBarcode = function () {
-
-		$("#barcode_place").hide();
 	}
 
 
