@@ -88,6 +88,12 @@ app.controller('appController', function ($scope, appFactory) {
 		//$("#success_transfuse").hide();
 	}
 
+	$scope.generateIdBarcode = function (bpack) {
+
+		var id = bpack.Key;
+		JsBarcode("#barcode", id);
+	}
+
 	$scope.getBpackHistory = function(bpack){
 		
 		var bpackId = bpack.Key;

@@ -72,6 +72,11 @@ app.controller('appController', function ($scope, appFactory) {
 	});
 	}
 
+	$scope.generateIdBarcode = function (bpack) {
+		var id = bpack.Key;
+		JsBarcode("#barcode", id);
+	}
+
 
     $scope.getBpackHistory = function(bpack){
 		

@@ -18,6 +18,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
 
+  <script src="script/JsBarcode.all.min.js"></script>
+
   <!-- adding style here -->
   <style type="text/css">
     header {
@@ -138,7 +140,7 @@
         <th>Desc</th>
           <th></th>
       <tr ng-repeat="bpack in selected_bpacks">
-        <td>{{bpack.Key}}</td>
+        <td><a data-toggle="modal" ng-click="generateIdBarcode(bpack)" data-target="#exampleModal">{{bpack.Key}}</a></td>
         <td>{{bpack.btype}}</td>
         <td>{{bpack.status}}</td>
         <td>{{bpack.donorId}}</td>
@@ -162,6 +164,19 @@
       </tr>
     </table>
 
+    <!-- Modal window for generated barcode -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <svg id="barcode"></svg>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+   </div>
 
     <div class="form-group" id="history_header" >
       <label>History of Bpack</label>
