@@ -27,6 +27,9 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#donor_history_header").hide();
 	$("#donor_history").hide();
 
+
+	$("#barcode_place").hide();
+
 	$scope.queryDonorsByBtype = function () {
 
 		appFactory.queryDonorsByBtype($scope.btype, function (data) {
@@ -47,51 +50,39 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#success_add_donor").hide();
 				$("#success_update_donor").hide();
 
+
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
 				data[i].Record.Key = data[i].Key;
 				array.push(data[i].Record);
+
 			}
 			array.sort(function(a, b) {
-			    return a.name.localeCompare(b.name);
+					return a.name.localeCompare(b.name);
+					
+
+
 			});
 			$scope.donors_by_btype = array;
+
 		  }
 		});
 	}
 
 
-	// $scope.queryClientsByRange = function () {
+	$scope.generateIdBarcode = function (donor) {
 
-	// 	appFactory.queryClientsByRange($scope.range, function (data) {
+		var donorKey = donor.Key;
 
+		JsBarcode("#barcode", donorKey);
+		$("#barcode_place").show();
+	}
+	
 
-	// 		if (data  == "Error: No data found") {
-	// 			console.log()
-	// 			$("#error_query_range").show();
-	// 			$("#ranged_clients").hide();
-				
-	// 		} else{
-	// 			$("#ranged_clients").show();
-	// 			$("#error_query_range").hide();
-	// 			$("#header_history").hide();
-	// 			$("#client_history_header").hide();
-	// 			$("#client_history").hide();
-	// 			$("#success_add_donor").hide();
-	// 			$("#success_update_donor").hide();
+	$scope.hideBarcode = function () {
 
-	// 		var array = [];
-	// 		for (var i = 0; i < data.length; i++) {
-	// 			data[i].Record.Key = data[i].Key;
-	// 			array.push(data[i].Record);
-	// 		}
-	// 		array.sort(function(a, b) {
-	// 		    return a.name.localeCompare(b.name);
-	// 		});
-	// 		$scope.ranged_clients = array;
-	// 	  }
-	// 	});
-	// }
+		$("#barcode_place").hide();
+	}
 
 
 	$scope.beforeAddDonor = function () {

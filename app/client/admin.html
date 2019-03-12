@@ -16,7 +16,46 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+  
+   <script src="script/JsBarcode.all.min.js"></script>
    
+
+   <style>
+    * {
+        color:#7F7F7F;
+        font-family:Arial,sans-serif;
+        font-size:12px;
+        font-weight:normal;
+    }    
+    #config{
+        overflow: auto;
+        margin-bottom: 10px;
+    }
+    .config{
+        float: left;
+        width: 200px;
+        height: 250px;
+        border: 1px solid #000;
+        margin-left: 10px;
+    }
+    .config .title{
+        font-weight: bold;
+        text-align: center;
+    }
+    .config .barcode2D,
+    #miscCanvas{
+      display: none;
+    }
+    #submit{
+        clear: both;
+    }
+    #barcodeTarget,
+    #canvasTarget{
+      margin-top: 20px;
+    }        
+  </style>
+  
+ 
     <!-- adding style here -->
     <style type="text/css">
       header{
@@ -118,15 +157,17 @@
       <th>SSN</th>
       <th>Age</th>
       <th>Btype</th>
-       <th></th>
+      <!--th>Barcode</th-->
+      <th></th>
     <tr ng-repeat="donor in donors_by_btype">
-      <td>{{donor.Key}}</td>
+      <td><a data-toggle="modal" ng-click="generateIdBarcode(donor)" data-target="#exampleModal">{{donor.Key}}</a></td>
       <td>{{donor.name}}</td>
       <td>{{donor.address}}</td>
       <td>{{donor.phone}}</td>
       <td>{{donor.ssn}}</td>
       <td>{{donor.age}}</td>
       <td>{{donor.btype}}</td>
+      <!--td><div id="demo"></div></td-->
       <td> 
         
     <!-- Action button -->
@@ -135,6 +176,7 @@
           Action
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="" ng-click="generateIdBarcode(donor)"> Donor ID barcode</a> <br/>
           <a class="dropdown-item" href="" ng-click="getDonorActivityStory(donor)"> Donor activity story</a> <br/>
           <a class="dropdown-item" href="" ng-click="beforeUpdateDonor(donor)">Update donor profile</a><br/>
           <a class="dropdown-item" href="" ng-click="getDonorHistory(donor)"> History</a> <br/>
@@ -144,6 +186,23 @@
     </td>
     </tr>
   </table>
+
+  <!-- Modal Windows for generated barcode -->
+  <div class="modal fade bd-example-modal-sm"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myBarcodeLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-header">
+              <h5 class="modal-title" id="myBarcodeLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-content">
+              <svg id="barcode"></svg>
+          </div>
+      </div>
+      
+   </div>
+  
   
     <div class="form-group"  id="header_history" >
       <label>History of Donor profile</label>
