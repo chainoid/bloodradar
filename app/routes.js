@@ -11,7 +11,9 @@ module.exports = function(app){
   app.get('/delete_bpack/:bpackId', function(req, res){
     radar.delete_bpack(req, res);
   });
- 
+  app.get('/get_donor_activity/:donorId', function(req, res){
+    radar.get_donor_activity(req, res);
+  });
 
   //  Admin page
   app.get('/add_donor/:donor', function(req, res){
@@ -34,9 +36,7 @@ module.exports = function(app){
     radar.donor_history(req, res);
   });
 
-  app.get('/get_donor_activity/:donorId', function(req, res){
-    radar.get_donor_activity(req, res);
-  });
+  
 
   // Blood Camp Page
   app.get('/add_donation/:donation', function(req, res){

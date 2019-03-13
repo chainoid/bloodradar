@@ -27,17 +27,25 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#donor_history_header").hide();
 	$("#donor_history").hide();
 
+	
+	$("#header_activity").hide();
+	$("#error_donor_record").hide();
+	$("#donor_activity").hide();
+
 
 	$scope.queryDonorsByBtype = function () {
 
 		appFactory.queryDonorsByBtype($scope.btype, function (data) {
 
+			 $("#error_donor_record").hide();
+
+
 			if (data == "Error: No data found"){
 				console.log()
 				$("#error_query_donors_by_type").show();
 				$("#donors_by_btype").hide();
-                
-                $scope.donors_by_btype = null;
+								
+        $scope.donors_by_btype = null;
 
 			} else{
 				$("#donors_by_btype").show();
@@ -45,6 +53,11 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#header_history").hide();
 				$("#donor_history_header").hide();
 				$("#donor_history").hide();
+
+				$("#header_activity").hide();
+			
+				$("#donor_activity").hide();
+
 				$("#success_add_donor").hide();
 				$("#success_update_donor").hide();
 
@@ -170,26 +183,39 @@ app.controller('appController', function ($scope, appFactory) {
 			} 
 		});
 	}
+	
 
-
-	$scope.getUserRecord = function () {
+	$scope.getDonorActivity = function (donor) {
 		
-		var id = $scope.id;
+		var donorId = donor.Key;
 
-		appFactory.getUserRecord(id, function(data){
+		appFactory.getDonorActivity(donorId, function(data){
 
-			$scope.user_record = data;
-
-			if ($scope.user_record == "User record not found"){
+			if (data == "Error: No data found"){
 				console.log()
-				$("#error_user_record").show();
-				$("#user_record").hide();
-				$("#user_record2").hide();
+				$("#error_donor_record").show();
+				$("#header_activity").hide();
+				$("#donor_activity").hide();
+							
+			} else {
+
+		  	$("#error_donor_record").hide();
+				$("#header_activity").show();
+				$("#donor_activity").show();
+
+			  var array = [];
+
+			  for (var i = 0; i < data.length; i++){
+			  	data[i].Record.Key = data[i].Key;
+				  array.push(data[i].Record);
+				}
 				
-			} else{
-				$("#error_user_record").hide();
-				$("#user_record").show();
-				$("#user_record2").show();
+			  array.sort(function(a, b) {
+			    return a.donationTS.localeCompare(b.donationTS);
+			  }
+			);
+			$scope.donor_activity = array;
+			
 			}
 		});
 	}
@@ -247,8 +273,8 @@ app.factory('appFactory', function ($http) {
 		});
     }
 
-	factory.getUserRecord = function (id, callback) {
-		$http.get('/get_user_record/' + id).success(function (output) {
+	factory.getDonorActivity = function (donorId, callback) {
+		$http.get('/get_donor_activity/' + donorId).success(function (output) {
 			callback(output)
 		});
 	}

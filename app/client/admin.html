@@ -140,7 +140,7 @@
           Action
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="" ng-click="getDonorActivityStory(donor)"> Donor activity story</a> <br/>
+          <a class="dropdown-item" href="" ng-click="getDonorActivity(donor)"> Donor activity story</a> <br/>
           <a class="dropdown-item" href="" ng-click="beforeUpdateDonor(donor)">Update donor profile</a><br/>
           <a class="dropdown-item" href="" ng-click="getDonorHistory(donor)"> History</a> <br/>
         </div>  
@@ -207,6 +207,38 @@
         <td>{{rec.IsDelete}}</td>  
       </tr>
     </table>
+
+
+
+    <div class="form-group"  id="header_activity" >
+      <label>Donor activity</label><br>
+    </div>
+
+
+    <div class="alert alert-info" role="alert" id="error_donor_record">
+      No activities for this donor
+    </div>
+
+  <table id="donor_activity" class="table" align="center">
+    <tr>
+     <th>Donation Id</th>
+     <th>Donation TS</th>
+     <th>Amount</th>
+     <th>Location</th>
+     <th>Status</th>
+     <th>Desc</th>
+    
+    </tr>
+    <tr ng-repeat="act in donor_activity">
+     <td>{{act.Key}}</td>
+     <td>{{act.donationTS}}</td>
+     <td>{{act.amount}}</td>
+     <td>{{act.location}}</td>
+     <td>{{act.status}}</td>
+     <td>{{act.desc}}</td>
+    
+    </tr>
+ </table>
 
     <div class="form-group" id="new_donor_button_panel" >
       <input id="openClientId" type="submit" value="New donor" class="btn btn-warning" ng-click="beforeAddDonor()">
