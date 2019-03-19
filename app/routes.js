@@ -47,22 +47,17 @@ module.exports = function(app){
   app.get('/change_bpack_status/:params', function(req, res){
     radar.change_bpack_status(req, res);
   });
-
  
 
   // Hospital
   app.get('/query_bpack_by_btype/:queryParams', function(req, res){
      radar.query_bpack_by_btype(req, res);
   });
+  app.get('/get_bpack_by_id/:bpackId', function(req, res){
+    radar.get_bpack_by_id(req, res);
+  });
   app.get('/do_transfuse/:bpackId', function(req, res){
     radar.do_transfuse(req, res);
-  });
-  
-  
-  
-  
-  app.get('/get_clients_by_range/:range', function(req, res){
-    radar.get_clients_by_range(req, res);
   });
    
 }

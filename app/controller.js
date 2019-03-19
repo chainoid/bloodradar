@@ -65,6 +65,21 @@ return{
 		ReadFromLedger(model, res);	    
 	},
 
+	get_bpack_by_id: function(req, res){
+
+		console.log("get bpack by id: ");
+
+		var bpackId = req.params.bpackId;
+		
+		var queryBpackByIdParams = {
+			BpackId:    bpackId
+		};
+
+		var model = GetRecordMapModel(queryBpackByIdParams, 'bpacks', 'getBpackById', 'bpack-channel');
+
+		ReadFromLedger(model, res);	    
+	},
+
 
 
 	get_donor_by_id: function(req, res){

@@ -87,6 +87,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.addBpack(APIstub, args)
 	} else if function == "queryBpackByBtype" {
 		return s.queryBpackByBtype(APIstub, args)
+	} else if function == "getBpackById" {
+		return s.getBpackById(APIstub, args)
 	} else if function == "doTransfuse" {
 		return s.doTransfuse(APIstub, args)
 	} else if function == "bpackHistory" {
@@ -208,6 +210,29 @@ func (s *SmartContract) queryBpackByBtype(APIstub shim.ChaincodeStubInterface, a
 
 	return shim.Success(buffer.Bytes())
 }
+
+
+/*
+  * The getBpackById method *
+  Used to view the records of one particular parsel
+  It takes one argument -- the key for the bpack in question
+*/
+func (s *SmartContract) getBpackById(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	bpackBytes, err := APIstub.GetState(args[0])
+	if err != nil {
+		return shim.Error("Could not locate bpack")
+	}
+
+	fmt.Printf("- getBpackById:\n%s\n", bpackBytes)
+
+	return shim.Success(bpackBytes)
+}
+
 
 
 /*
