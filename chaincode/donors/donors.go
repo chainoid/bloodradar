@@ -199,7 +199,7 @@ func (s *SmartContract) queryDonorsByBtype(APIstub shim.ChaincodeStubInterface, 
 /*
   * The getDonorById method *
   Used to view the records of one particular parsel
-  It takes one argument -- the key for the parsel in question
+  It takes one argument -- the key for the donor in question
 */
 func (s *SmartContract) getDonorById(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 

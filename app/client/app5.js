@@ -26,16 +26,23 @@ app.controller('appController', function ($scope, appFactory) {
 		var donorId = $scope.donorId;
 
 		appFactory.getDonorById(donorId, function(data){
-          	
-			if (data == "Donor record not found"){
+				
+			$("#donor_history").hide();
+			$("#donor_activity").hide();
+			
+			if ((data == "") || (data == "Error: No data found")) {
 		  		console.log()
 			  	$("#error_donor_profile").show();
-				  $("#donor_profile").hide();
+					$("#donor_profile").hide();
+					$("#header_history").hide();
+					$("#header_activity").hide();
 			} else{
+
 				$("#error_donor_profile").hide();
 				$("#donor_profile").show();
 				$("#header_history").show();
 				$("#header_activity").show();
+				
 				$scope.selected_donor = data;
 			}
 		});
