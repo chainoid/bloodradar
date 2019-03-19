@@ -12,7 +12,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#donor_record").hide();
 
 
-	$("#error_query_range").hide();
+	$("#error_donor_record").hide();
 	$("#ranged_clients").hide();
 	
 	$("#new_donation_button_panel").hide();
@@ -27,13 +27,13 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.queryDonorData(donorId, function(data){
 
-			if (data == "Error: No data found"){
+			if ((data == "") || (data == "Error: No data found")){
 				console.log()
 				$("#error_donor_record").show();
 				$("#donor_record").hide();
 				$("#new_donation_button_panel").hide();
 			} else{
-				$("#error_user_record").hide();
+				$("#error_donor_record").hide();
 				$("#donor_record").show();
 				$("#new_donation_button_panel").show();
 				$scope.donor_record = data;
