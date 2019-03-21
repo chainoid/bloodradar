@@ -121,6 +121,7 @@
     <tr>
       <th>ID</th>
       <th>Blood type</th>
+      <th>Amount</th>
       <th>Status</th>
       <th>Amount</th>
       <th>Donor ID</th>
@@ -132,6 +133,7 @@
     <tr ng-repeat="bpack in selected_bpacks">
       <td><a data-toggle="modal" ng-click="generateIdBarcode(bpack)" data-target="#exampleModal">{{bpack.Key}}</a></td>
       <td>{{bpack.btype}}</td>
+      <td>{{bpack.amount}}</td>
       <td>{{bpack.status}}</td>
       <td>{{bpack.amount}}</td>
       <td>{{bpack.donorId}}</td>
@@ -170,8 +172,6 @@
 
   <div class="form-group" id="history_header" >
     <label>History of Bpack</label>
-    <!-- Enter a parsel ID: <input id="parselID" class="form-control input-field" type="text" placeholder=" Ex: 2" ng-model="historyId">
-    <input id="historyParsel" type="submit" value="History" class="btn btn-primary" ng-click="historyParsel()"> -->
   </div>
 
   <div class="alert alert-danger" role="alert" id="error_bpack_history">

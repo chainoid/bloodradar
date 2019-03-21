@@ -132,6 +132,7 @@
       <tr>
         <th>ID</th>
         <th>Blood type</th>
+        <th>Amount</th>
         <th>Status</th>
         <th>Donor ID</th>
         <th>Donation TS</th>
@@ -142,6 +143,7 @@
       <tr ng-repeat="bpack in selected_bpacks">
         <td><a data-toggle="modal" ng-click="generateIdBarcode(bpack)" data-target="#exampleModal">{{bpack.Key}}</a></td>
         <td>{{bpack.btype}}</td>
+        <td>{{bpack.amount}}</td>
         <td>{{bpack.status}}</td>
         <td>{{bpack.donorId}}</td>
         <td>{{bpack.donationTS}}</td>

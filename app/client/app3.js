@@ -172,6 +172,31 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#success_change_status").hide();
 	}
 
+
+	$scope.deleteBpack = function (bpack) {
+	
+		var bpackId = bpack.Key;
+
+		appFactory.deleteBpack(bpackId, function (data) {
+
+			$scope.delete_parsel = data;
+			
+			$("#error_id_delete_bpack").hide();
+			$("#success_delete").show();
+			$("#success_transfuse").hide();
+
+			if ($scope.delete_parsel == "Error: Parsel not found") {
+				$("#error_id_delete_parsel").show();
+		    	$("#success_delete").hide();
+			
+			} else if ($scope.delete_parsel == "Error: Not delivered") {
+				$("#error_id_delete_parsel").hide();
+				$("#success_delete").hide();
+		    	
+        	} 
+		});
+	}
+
 });
 
 
@@ -195,12 +220,17 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-
     factory.changeBpackStatus = function (statusParams, callback) {
 
 		var params = statusParams.bpackId + "-" + statusParams.status + "-" + statusParams.holder + "-" + statusParams.location;
 
 		$http.get('/change_bpack_status/' + params).success(function (output) {
+			callback(output)
+		});
+	}
+
+	factory.deleteBpack = function(bpackId, callback){
+    	$http.get('/delete_bpack/'+bpackId).success(function(output){
 			callback(output)
 		});
 	}

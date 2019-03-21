@@ -119,37 +119,7 @@ return{
 		ReadFromLedger(model, res);	    
 	},
 
-	create_parsel_order: function(req, res) {
-
-		console.log(" create order for new parsel: ");
-
-		var array = req.params.order.split("-");
-		console.log(array);
-
-		var senderId = array[0]
-		var receiverId = array[1]
-
-        // TODO: clarify if needs
-		var senderBranch = ""
-		var receiverBranch = ""
-
-		var parselOrder = {
-			SenderId:       senderId,
-			SenderBranch:   senderBranch,
-			ReceiverId:     receiverId,
-			ReceiverBranch:	receiverBranch
-		};
-
-		// Retrieve Blockchain Parameter Mapping Model
-		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(parselOrder, 'parsels', 'createParselOrder', 'parsel-channel');
-		
-		console.log(" The model before write to the ledger: ",  model);
-		
-		WriteToLedger(model, res);
-	},
-
-
+	
 	change_bpack_status: function(req, res) {
 
 		console.log(" put an sender branch and TS: ");
