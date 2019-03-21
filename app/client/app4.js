@@ -61,7 +61,6 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#success_add_donor").hide();
 				$("#success_update_donor").hide();
 
-
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
 				data[i].Record.Key = data[i].Key;
@@ -81,7 +80,6 @@ app.controller('appController', function ($scope, appFactory) {
 	$scope.generateIdBarcode = function (donor) {
 
 		var donorKey = donor.Key;
-		 
 		JsBarcode("#barcode", donorKey);
 	}
 
@@ -142,7 +140,6 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
  
-
 	$scope.getDonorHistory = function (donor) {
 
 		var donorKey = donor.Key;
@@ -219,8 +216,6 @@ app.controller('appController', function ($scope, appFactory) {
 			}
 		});
 	}
-
-
 });
 
 
@@ -265,13 +260,12 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 	
-
 	factory.donorHistory = function (donorKey, callback) {
 
 		$http.get('/donor_history/' + donorKey).success(function (output) {
 			callback(output)
 		});
-    }
+  }
 
 	factory.getDonorActivity = function (donorId, callback) {
 		$http.get('/get_donor_activity/' + donorId).success(function (output) {

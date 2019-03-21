@@ -23,12 +23,9 @@ const ledgerUtils  = require("./ledgerUtils.js");
 module.exports = (function() {
 
 
-
-
 // **  The Main functionality ** // 
 return{
 	
-
 	get_donors_by_btype: function(req, res){
 
 		console.log("getting donors by btype: ");
@@ -43,7 +40,6 @@ return{
 
 		ReadFromLedger(model, res);	    
 	},
-
 
 	query_bpack_by_btype: function(req, res){
 
@@ -79,8 +75,6 @@ return{
 
 		ReadFromLedger(model, res);	    
 	},
-
-
 
 	get_donor_by_id: function(req, res){
 
@@ -118,7 +112,6 @@ return{
 
 		ReadFromLedger(model, res);	    
 	},
-
 	
 	change_bpack_status: function(req, res) {
 
@@ -236,7 +229,6 @@ return{
 		WriteToLedger(model, res);
 	},
 
-
 	add_donation: function(req, res){
 
 		console.log("submit recording of new donation: ");
@@ -284,7 +276,6 @@ return{
 		ReadFromLedger(model, res);	   
 	},
 
-
 	donor_history: function(req, res){
 
 		console.log("get donor history: ");
@@ -299,7 +290,6 @@ return{
 
 		ReadFromLedger(model, res);	   
 	},
-
 
     bpack_history: function(req, res){
 
@@ -316,48 +306,19 @@ return{
 		ReadFromLedger(model, res);	   
 	},
 
-
 	do_transfuse: function(req, res){ 
 
 		console.log("put a timestamp, changing owner of bpack on transfuse: ");
 
-		//var array = req.params.bpackId("-");
-		//var bpack = array[0]
-		
-
 		var bpackId = req.params.bpackId;
 
-		//console.log(array);
-
-		var transfusion = {
+		var transfusionParam = {
             BpackId: bpackId
        	};
 
         // Retrieve Blockchain Parameter Mapping Model
 		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(transfusion, 'bpacks', 'doTransfuse', 'bpack-channel');
-		
-		console.log(" The model before write to the ledger: ",  model);
-		
-		WriteToLedger(model, res);
-	},
-
-	delivery_parsel: function(req, res){ 
-
-		console.log("put a timestamp, changing owner of parsel on delivery: ");
-
-		var array = req.params.delivery.split("-");
-		var parselId = array[0]
-		
-		console.log(array);
-
-		var parsel = {
-            ParselId: parselId
-       	};
-
-        // Retrieve Blockchain Parameter Mapping Model
-		// param(s): record, chaincodeId, chaincodeFunction, channelId
-		var model = GetRecordMapModel(parsel, 'parsels', 'deliveryParsel', 'parsel-channel');
+		var model = GetRecordMapModel(transfusionParam, 'bpacks', 'doTransfuse', 'bpack-channel');
 		
 		console.log(" The model before write to the ledger: ",  model);
 		

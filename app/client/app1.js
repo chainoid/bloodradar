@@ -210,7 +210,6 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-
 	factory.deleteBpack = function(bpackId, callback){
     	$http.get('/delete_bpack/'+bpackId).success(function(output){
 			callback(output)
