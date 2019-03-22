@@ -308,14 +308,14 @@ func (s *SmartContract) doTransfuse(APIstub shim.ChaincodeStubInterface, args []
 
 	json.Unmarshal(bpackAsBytes, &bpack)
 
-	// Normally check that the specified argument is a valid holder of parsel
-	// we are skipping this check for this example
-	// if parsel.ReceiverTS != "" {
+	// Normally check that the specified argument is a valid status  of bpack
+	// 
+	if bpack.Status != "TESTED" {
 
-	// 	fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])
+	 	fmt.Printf("- doTransfuse with id: %s incorrect status \n", args[0])
 
-	// 	return shim.Error("Already delivered")
-	// }
+	 	return shim.Error("Incorrect status")
+	}
 
 	bpack.HolderTS = time.Now().Format(time.RFC3339)
 	bpack.Status   = "TRANSFUSED"

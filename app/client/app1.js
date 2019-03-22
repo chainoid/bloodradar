@@ -18,30 +18,9 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_bpack_history").hide();
 	$("#bpack_history").hide();
 
-
+	$("#error_id_transfuse_bpack").hide();
+	$("#error_transfuse_bpack").hide();
 	$("#success_transfuse").hide();
-
-
-
-
-
-//	$("#error_add_group").hide();
-//	$("#success_add_group").hide();
-
-//	$("#error_add_user").hide();
-//	$("#success_add_user").hide();
-
-//	$("#success_generated").hide();
-//	$("#error_generated").hide();
-	
-
-//	$("#error_query").hide();
-//	$("#error_sender").hide();
-//	$("#error_query_id").hide();
-//	$("#error_query_student").hide();
-//	$("#error_prepare_delivery").hide();
-//	$("#error_pass_exam").hide();
-//	$("#error_student_record").hide();
 	
 
 	$("#error_id_delete_bpack").hide();
@@ -141,17 +120,17 @@ app.controller('appController', function ($scope, appFactory) {
 
 			$scope.transfuse_result = data;
 			
-			$("#error_id_delete_bpack").hide();
+			$("#error_transfuse_bpack").hide();
+			$("#error_id_transfuse_bpack").hide();
 			$("#success_transfuse").show();
 
-			if ($scope.transfuse_result == "Error: Parsel not found") {
-				$("#error_id_delete_parsel").show();
+			if (data == "Error: Bpack not found") {
+				$("#error_id_transfuse_bpack").show();
 		    	$("#success_transfuse").hide();
 			
-			} else if ($scope.transfuse_result == "Error: Not delivered") {
-				$("#error_id_delete_parsel").hide();
+			} else if (data == "Error: Incorrect status") {
+				$("#error_transfuse_bpack").show();
 				$("#success_transfuse").hide();
-		    	
         	} 
 		});
 	}
@@ -162,17 +141,17 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.deleteBpack(bpackId, function (data) {
 
-			$scope.delete_parsel = data;
+			$scope.delete_bpack = data;
 			
 			$("#error_id_delete_bpack").hide();
 			$("#success_delete").show();
 			$("#success_transfuse").hide();
 
-			if ($scope.delete_parsel == "Error: Parsel not found") {
+			if (data == "Error: Bpack not found") {
 				$("#error_id_delete_parsel").show();
 		    	$("#success_delete").hide();
 			
-			} else if ($scope.delete_parsel == "Error: Not delivered") {
+			} else if (data == "Error: Not delivered") {
 				$("#error_id_delete_parsel").hide();
 				$("#success_delete").hide();
 		    	
