@@ -6,7 +6,7 @@
 #
 # Exit on first error
 
-set -e
+set -ev
 
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
@@ -35,7 +35,7 @@ docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/h
 # Join peer0.org1.example.com to the channel.
 docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel join -b donor-channel.block
 
-
+sleep 15
 
 # Now launch the CLI container in order to install, instantiate chaincode
 # and prime the ledger with our 5  parsels

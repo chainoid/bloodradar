@@ -6,7 +6,7 @@
     "dependencies": {
         "angular": "^1.4.3",
         "body-parser": "latest",
-        "bootstrap": "^4.2.1",
+        "bootstrap": "^4.3.1",
         "ejs": "latest",
         "express": "latest",
         "fabric-ca-client": "^1.0.2",
